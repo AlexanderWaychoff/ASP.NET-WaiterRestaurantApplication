@@ -5,9 +5,7 @@ using System.Web;
 
 namespace WaiterRestaurantApplication.Models
 {
-    public class SubscriptionTypes
+    public class ZipCode
     {
-        public int SubscriptionTypesId { get; set; }
-        //public string
     }
 }

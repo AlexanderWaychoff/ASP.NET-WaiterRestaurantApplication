@@ -5,9 +5,9 @@ using System.Web;
 
 namespace WaiterRestaurantApplication.Models
 {
-    public class WeatherConditions
+    public class WeatherCondition
     {
-        public int WeatherConditionsId { get; set; }
+        public int WeatherConditionId { get; set; }
         public int Temperature { get; set; }
         public string WeatherDescription { get; set; }
     }
