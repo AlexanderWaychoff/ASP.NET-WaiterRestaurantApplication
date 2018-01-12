@@ -24,6 +24,7 @@ namespace WaiterRestaurantApplication.Models
 
         //public ICollection<Employee> Employees { get; set; }
 
+
         public ICollection<Transaction> Transactions { get; set; }
 
         public Subscription Subscription { get; set; }
