@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WaiterRestaurantApplication.Models.TableVisit>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WeatherCondition.WeatherDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DinerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DinerPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WaitMinutes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsHostEntry)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsSatisfied)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PartySize)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsWarned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GracePeriodStart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsNoShow)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.WeatherCondition.WeatherDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DinerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DinerPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WaitMinutes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsHostEntry)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsSatisfied)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PartySize)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsWarned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GracePeriodStart)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsNoShow)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TableVisitId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.TableVisitId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TableVisitId })
+        </td>
+    </tr>
+}
+
+</table>

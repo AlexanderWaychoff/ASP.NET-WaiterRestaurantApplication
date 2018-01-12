@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WaiterRestaurantApplication.Models.Restaurant>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Address.StreetOne)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpenTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CloseTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsOpen)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PeopleBeforeWarning)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GracePeriodMinutes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentWaitMinutes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.StreetOne)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RestaurantName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpenTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CloseTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsOpen)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PeopleBeforeWarning)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GracePeriodMinutes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrentWaitMinutes)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.RestaurantId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.RestaurantId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.RestaurantId })
+        </td>
+    </tr>
+}
+
+</table>

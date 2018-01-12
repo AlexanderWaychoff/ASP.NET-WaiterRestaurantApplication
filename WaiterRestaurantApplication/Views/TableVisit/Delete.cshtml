@@ -1,0 +1,121 @@
+﻿@model WaiterRestaurantApplication.Models.TableVisit
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TableVisit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WeatherCondition.WeatherDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WeatherCondition.WeatherDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DinerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DinerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DinerPhone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DinerPhone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WaitMinutes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WaitMinutes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsHostEntry)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsHostEntry)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSatisfied)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsSatisfied)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartySize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartySize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWarned)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsWarned)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GracePeriodStart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GracePeriodStart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsNoShow)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsNoShow)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,83 @@
+﻿@model WaiterRestaurantApplication.Models.Restaurant
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Restaurant</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.StreetOne)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.StreetOne)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RestaurantName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RestaurantName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OpenTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OpenTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CloseTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CloseTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsOpen)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsOpen)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PeopleBeforeWarning)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeopleBeforeWarning)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GracePeriodMinutes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GracePeriodMinutes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrentWaitMinutes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CurrentWaitMinutes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

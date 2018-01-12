@@ -29,5 +29,13 @@ namespace WaiterRestaurantApplication.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Restaurant> Restaurants { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Address> Addresses { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.TableVisit> TableVisits { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.WeatherCondition> WeatherConditions { get; set; }
     }
 }
