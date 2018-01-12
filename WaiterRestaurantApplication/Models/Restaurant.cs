@@ -31,5 +31,8 @@ namespace WaiterRestaurantApplication.Models
         public int CurrentWaitMinutes { get; set; }
         //public int AverageWaitMinutes = calculate WaitMinutes
 
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
+
     }
 }
