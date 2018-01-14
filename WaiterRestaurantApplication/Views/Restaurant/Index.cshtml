@@ -63,7 +63,14 @@
             @Html.DisplayFor(modelItem => restaurant.GracePeriodMinutes)
         </td>
         <td>
-            @restaurant.ConfirmedEmployees.Count
+            @if (restaurant.ConfirmedEmployees.Count > 0)
+            {
+                @Html.ActionLink("Manage " + restaurant.ConfirmedEmployees.Count + " Employees", "ManageEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-warning btn-block btn-xs" })
+            }
+            else
+            {
+                <p class="text-danger"><small>No confirmed employees</small></p>
+            }
         </td>
         <td>
             @if (restaurant.PendingEmployees.Count > 0)
@@ -72,7 +79,7 @@
             }
             else
             {
-                <p class="text-success">None to confirm</p>
+                <p class="text-success"><small>None to confirm</small></p>
             }
         </td>
         <td>

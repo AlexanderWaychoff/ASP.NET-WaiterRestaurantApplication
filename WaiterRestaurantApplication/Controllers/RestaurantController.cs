@@ -351,5 +351,68 @@ namespace WaiterRestaurantApplication.Controllers
             return RedirectToAction("Index", "Restaurant");
         }
 
+        public ActionResult DenyEmployee(int restaurantId, string userId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            restaurant.PendingEmployees.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Restaurant");
+        }
+
+        public ActionResult ManageEmployees(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.ConfirmedEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            return View(restaurant);
+        }
+
+        public ActionResult DeleteEmployee(int restaurantId, string userId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            restaurant.ConfirmedEmployees.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Restaurant");
+        }
+
+
     }
 }

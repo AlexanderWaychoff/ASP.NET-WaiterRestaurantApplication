@@ -302,6 +302,7 @@
     <Content Include="Views\Restaurant\DisplayMyRestaurants.cshtml" />
     <Content Include="Views\Restaurant\ConfirmEmployment.cshtml" />
     <Content Include="Views\Restaurant\ConfirmEmployees.cshtml" />
+    <Content Include="Views\Restaurant\ManageEmployees.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
