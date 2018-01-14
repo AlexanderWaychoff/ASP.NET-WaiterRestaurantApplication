@@ -101,11 +101,14 @@ namespace WaiterRestaurantApplication.Migrations
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
                         Restaurant_RestaurantId = c.Int(),
+                        Restaurant_RestaurantId1 = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Restaurants", t => t.Restaurant_RestaurantId)
+                .ForeignKey("dbo.Restaurants", t => t.Restaurant_RestaurantId1)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.Restaurant_RestaurantId);
+                .Index(t => t.Restaurant_RestaurantId)
+                .Index(t => t.Restaurant_RestaurantId1);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -228,6 +231,7 @@ namespace WaiterRestaurantApplication.Migrations
             DropForeignKey("dbo.TableVisits", "Restaurant_RestaurantId", "dbo.Restaurants");
             DropForeignKey("dbo.TableVisits", "WeatherConditionId", "dbo.WeatherConditions");
             DropForeignKey("dbo.Restaurants", "Subscription_SubscriptionId", "dbo.Subscriptions");
+            DropForeignKey("dbo.AspNetUsers", "Restaurant_RestaurantId1", "dbo.Restaurants");
             DropForeignKey("dbo.AspNetUsers", "Restaurant_RestaurantId", "dbo.Restaurants");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Restaurants", "ApplicationUser_Id", "dbo.AspNetUsers");
@@ -245,6 +249,7 @@ namespace WaiterRestaurantApplication.Migrations
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", new[] { "Restaurant_RestaurantId1" });
             DropIndex("dbo.AspNetUsers", new[] { "Restaurant_RestaurantId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Restaurants", new[] { "Subscription_SubscriptionId" });

@@ -37,6 +37,8 @@ namespace WaiterRestaurantApplication.Controllers
             var userId = User.Identity.GetUserId();
             var restaurants = db.Restaurants
                 .Include(r => r.Address)
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
                 .Where(r => r.UserId == userId)
                 .ToList();
             return View(restaurants);
@@ -246,16 +248,17 @@ namespace WaiterRestaurantApplication.Controllers
             //User is Restaurant Employee
             //Get all restaurants
             var allRestaurants = db.Restaurants
-                .Include(r => r.Employees)
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
                 .ToList();
             List<Restaurant> myRestaurants = new List<Restaurant>();
             string userId = User.Identity.GetUserId();
             var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
             foreach (Restaurant restaurant in allRestaurants)
             {
-                if ( restaurant.Employees != null )
+                if ( restaurant.ConfirmedEmployees != null )
                 {
-                    if (restaurant.Employees.Contains(user))
+                    if (restaurant.ConfirmedEmployees.Contains(user))
                     {
                         myRestaurants.Add(restaurant);
                     }
@@ -296,14 +299,56 @@ namespace WaiterRestaurantApplication.Controllers
             }
 
             var restaurant = db.Restaurants
-                .Include(r => r.Employees)
+                .Include(r => r.ConfirmedEmployees)
+                .Include(r => r.PendingEmployees)
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
             var userId = User.Identity.GetUserId();
             var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
-            restaurant.Employees.Add(user);
+            restaurant.PendingEmployees.Add(user);
             db.SaveChanges();
             return RedirectToAction("DisplayMyRestaurants", "Restaurant");
+        }
+
+        public ActionResult ConfirmEmployees(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.PendingEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            return View(restaurant);
+        }
+
+        public ActionResult ConfirmEmployee(int restaurantId, string userId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            restaurant.PendingEmployees.Remove(user);
+            restaurant.ConfirmedEmployees.Add(user);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Restaurant");
         }
 
     }

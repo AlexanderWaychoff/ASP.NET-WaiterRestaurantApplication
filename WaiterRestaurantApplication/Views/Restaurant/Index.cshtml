@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WaiterRestaurantApplication.Models.Restaurant>
+﻿@using WaiterRestaurantApplication.Models;
+@model IEnumerable<WaiterRestaurantApplication.Models.Restaurant>
 
 @{
     ViewBag.Title = "My Restaurants";
@@ -8,67 +9,76 @@
 <h2>My Restaurants</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add Restaurant", "Create", null, new {@class="btn btn-primary" })
 </p>
-<table class="table">
+<table class="table table-striped table-bordered table-condensed">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Address.StreetOne)
+            Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RestaurantName)
+            Open Time
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.OpenTime)
+            Close Time
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CloseTime)
+            Active?
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IsOpen)
+            #Diners Before Warning
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PeopleBeforeWarning)
+            Grace Period (mins)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.GracePeriodMinutes)
+            Confirmed Employees
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CurrentWaitMinutes)
+            Pending Employees
         </th>
-        <th></th>
+        <th>
+            Actions    
+        </th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (Restaurant restaurant in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Address.StreetOne)
+            @Html.DisplayFor(modelItem => restaurant.RestaurantName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.RestaurantName)
+            @Html.DisplayFor(modelItem => restaurant.OpenTime)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.OpenTime)
+            @Html.DisplayFor(modelItem => restaurant.CloseTime)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CloseTime)
+            @Html.DisplayFor(modelItem => restaurant.IsOpen)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsOpen)
+            @Html.DisplayFor(modelItem => restaurant.PeopleBeforeWarning)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.PeopleBeforeWarning)
+            @Html.DisplayFor(modelItem => restaurant.GracePeriodMinutes)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.GracePeriodMinutes)
+            @restaurant.ConfirmedEmployees.Count
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CurrentWaitMinutes)
+            @if (restaurant.PendingEmployees.Count > 0)
+            {
+                @Html.ActionLink("Confirm " + restaurant.PendingEmployees.Count + " Employees", "ConfirmEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class="btn btn-success btn-block btn-xs" })
+            }
+            else
+            {
+                <p class="text-success">None to confirm</p>
+            }
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RestaurantId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RestaurantId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RestaurantId })
+            @Html.ActionLink("details", "Details", new { id = restaurant.RestaurantId }, new { @class = "btn btn-info btn-xs" })
+            @Html.ActionLink("edit", "Edit", new { id = restaurant.RestaurantId }, new { @class = "btn btn-warning btn-xs" })
+            @Html.ActionLink("delete", "Delete", new { id=restaurant.RestaurantId }, new { @class = "btn btn-danger btn-xs" })
         </td>
     </tr>
 }
