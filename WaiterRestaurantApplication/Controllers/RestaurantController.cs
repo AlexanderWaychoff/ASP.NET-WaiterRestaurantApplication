@@ -24,14 +24,22 @@ namespace WaiterRestaurantApplication.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            if (!User.IsInRole("RestaurantManager"))
+            if (!(User.IsInRole("RestaurantManager") || User.IsInRole("RestaurantEmployee")))
             {
                 return HttpNotFound();
             }
+            if ( User.IsInRole("RestaurantEmployee") )
+            {
+                return RedirectToAction("DisplayMyRestaurants", "Restaurant");
+            }
 
-            //var restaurants = db.Restaurants.Include(r => r.Address).Where(r => r.UserId == User.Identity.GetUserId());
-            var restaurants = db.Restaurants.Include(r => r.Address);
-            return View(restaurants.ToList());
+            //User is Restaurant Manager
+            var userId = User.Identity.GetUserId();
+            var restaurants = db.Restaurants
+                .Include(r => r.Address)
+                .Where(r => r.UserId == userId)
+                .ToList();
+            return View(restaurants);
         }
 
         // GET: Restaurant/Details/5
@@ -223,5 +231,80 @@ namespace WaiterRestaurantApplication.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult DisplayMyRestaurants()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            //User is Restaurant Employee
+            //Get all restaurants
+            var allRestaurants = db.Restaurants
+                .Include(r => r.Employees)
+                .ToList();
+            List<Restaurant> myRestaurants = new List<Restaurant>();
+            string userId = User.Identity.GetUserId();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            foreach (Restaurant restaurant in allRestaurants)
+            {
+                if ( restaurant.Employees != null )
+                {
+                    if (restaurant.Employees.Contains(user))
+                    {
+                        myRestaurants.Add(restaurant);
+                    }
+                }
+            }
+            return View(myRestaurants);
+        }
+
+        public ActionResult ConfirmEmployment()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            //User is Restaurant Employee
+            var userId = User.Identity.GetUserId();
+            var restaurants = db.Restaurants
+                .Include(r => r.Address)
+                .ToList();
+            return View(restaurants);
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmEmployment(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.Employees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
+            restaurant.Employees.Add(user);
+            db.SaveChanges();
+            return RedirectToAction("DisplayMyRestaurants", "Restaurant");
+        }
+
     }
 }

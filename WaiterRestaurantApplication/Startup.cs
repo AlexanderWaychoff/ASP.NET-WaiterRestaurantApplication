@@ -75,11 +75,27 @@ namespace WaiterRestaurantApplication
             }
 
             // creating Creating Employee role    
-            if (!roleManager.RoleExists("ResturantEmployee"))
+            if (!roleManager.RoleExists("RestaurantEmployee"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "RestaurantEmployee";
                 roleManager.Create(role);
+
+                //Here we create a Default Restaurant Employee                  
+                var user = new ApplicationUser();
+                user.UserName = "EmployeeGuy1";
+                user.Email = "employee@ale-house.com";
+
+                string userPWD = "Password123!";
+
+                var chkUser = UserManager.Create(user, userPWD);
+
+                //Add default User to Role Admin   
+                if (chkUser.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "RestaurantEmployee");
+
+                }
             }
 
             if (!roleManager.RoleExists("Diner"))

@@ -1,0 +1,23 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model IEnumerable<WaiterRestaurantApplication.Models.Restaurant>
+
+@{
+    ViewBag.Title = "My Restaurants";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Restaurants</h2>
+
+@if(Model.Count() > 0)
+{
+    foreach(Restaurant restaurant in Model)
+    {
+        <p>@restaurant.RestaurantName</p>
+    }
+}
+else {
+    <p>You are not a confirmed employee at one of our member restaurants.</p>
+    <p>
+        @Html.ActionLink("Confirm your Employment", "ConfirmEmployment", "Restaurant", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+    </p>
+}
