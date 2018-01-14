@@ -33,7 +33,6 @@ namespace WaiterRestaurantApplication
                 roleManager.Create(role);
 
                 //Here we create a Admin super user who will maintain the website                  
-
                 var user = new ApplicationUser();
                 user.UserName = "BigBoss";
                 user.Email = "redsa7777@yahoo.com";
@@ -51,11 +50,27 @@ namespace WaiterRestaurantApplication
             }
 
             // creating Creating Manager role    
-            if (!roleManager.RoleExists("ResturantManager"))
+            if (!roleManager.RoleExists("RestaurantManager"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "RestaurantManager";
                 roleManager.Create(role);
+
+                //Here we create a Default Restaurant Manager                  
+                var user = new ApplicationUser();
+                user.UserName = "AleHouseGuy";
+                user.Email = "beers@ale-house.com";
+
+                string userPWD = "Password123!";
+
+                var chkUser = UserManager.Create(user, userPWD);
+
+                //Add default User to Role Admin   
+                if (chkUser.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "RestaurantManager");
+
+                }
 
             }
 

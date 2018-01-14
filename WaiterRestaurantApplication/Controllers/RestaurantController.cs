@@ -20,6 +20,15 @@ namespace WaiterRestaurantApplication.Controllers
         // GET: Restaurant
         public ActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
             //var restaurants = db.Restaurants.Include(r => r.Address).Where(r => r.UserId == User.Identity.GetUserId());
             var restaurants = db.Restaurants.Include(r => r.Address);
             return View(restaurants.ToList());
@@ -43,6 +52,15 @@ namespace WaiterRestaurantApplication.Controllers
         // GET: Restaurant/Create
         public ActionResult Create()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
             ViewBag.StateId = new SelectList(db.States, "StateId", "Abbreviation");
             return View();
         }
@@ -59,6 +77,11 @@ namespace WaiterRestaurantApplication.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
 
             Restaurant restaurant = new Restaurant();
             if (ModelState.IsValid)

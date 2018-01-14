@@ -13,7 +13,7 @@ namespace WaiterRestaurantApplication.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201801122123059_init"; }
+            get { return "201801141954430_init"; }
         }
         
         string IMigrationMetadata.Source

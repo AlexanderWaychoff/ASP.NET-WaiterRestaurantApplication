@@ -1,19 +1,33 @@
-﻿@model WaiterRestaurantApplication.Models.Restaurant
+﻿@using Microsoft.AspNet.Identity
+@model WaiterRestaurantApplication.Models.Restaurant
 
 @{
     ViewBag.Title = "Add My Restaurant";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Add My Restaurant</h2>
+<div class="row">
+    <div id="map" style="width: 100%; height: 400px; margin-bottom: 20px; display: none;"></div>
+</div>
 
-@using (Html.BeginForm()) 
+<h2>Create Restaurant for @User.Identity.GetUserName()</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addressCreateForm" }))
 {
     @Html.AntiForgeryToken()
-    
+    <div class="row">
+        <div class="col-md-6" id="validationErrors" style="display: none;">
+            <div class="alert alert-danger" role="alert">
+                <!--Error messages-->
+            </div>
+        </div>
+    </div>
     <div class="form-horizontal">
+        <input id="lat" name="lat" type="hidden" value="" />
+        <input id="lng" name="lng" type="hidden" value="" />
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
             @Html.LabelFor(model => model.RestaurantName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -23,16 +37,20 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Street Address</label>
+            <label class="control-label col-md-2">Address</label>
             <div class="col-md-10">
                 <input class="form-control text-box single-line" id="streetOne" name="streetOne" type="text" value="">
+                @*@Html.EditorFor(model => model.Address.StreetOne, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Address.StreetOne, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2"></label>
             <div class="col-md-10">
-                <input class="form-control text-box single-line" id="streetTwo" name="streetTwo" type="text" value="">
+                <input class="form-control text-box single-line" id="streetTwo" name="streetTow" type="text" value="">
+                @*@Html.EditorFor(model => model.Address.StreetTwo, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Address.StreetTwo, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -40,31 +58,163 @@
             <label class="control-label col-md-2">City</label>
             <div class="col-md-10">
                 <input class="form-control text-box single-line" id="city" name="city" type="text" value="">
+                @*@Html.EditorFor(model => model.City.Name, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Address.City.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">State</label>
+            @Html.LabelFor(model => model.Address.StateId, "StateId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("StateId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2">Zip Code</label>
             <div class="col-md-10">
-                <input class="form-control text-box single-line" id="ZipCode_Number" name="ZipCode_Number" type="text" value="">
+                <input class="form-control text-box single-line" id="zipCode" name="zipCode" type="text" value="">
+                @*@Html.EditorFor(model => model.ZipCode.Number, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Address.ZipCode.Number, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button id="search" class="btn btn-info">Search</button>
+            </div>
+        </div>
+
+        <div class="form-group" id="submitButton" style="display: none;">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="submit" type="submit" value="Save Address" class="btn btn-primary" />
+                <input id="reset" type="reset" value="Reset" class="btn" />
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+@section Scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3F02Dr7BSQRR48YgU8akdwdR-9FsXp3w"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let map;
+            let marker;
+
+            $("#addressCreateForm :input").change(function () {
+                $("#submitButton").fadeOut(function () {
+                    $("#map").fadeOut();
+                    $("#search").fadeIn();
+                });
+            });
+
+            let errorMessage = [];
+            $('#search')
+                .click(function (event) {
+                    $('#validationErrors').hide();
+                    errorMessage = [];
+                    let isValidated = validate();
+                    if (isValidated) {
+                        event.preventDefault();
+                        let streetAddressOne = $('#streetOne').val();
+                        let streetAddressTwo = $('#streetTwo').val();
+                        let cityName = cleanCode($('#city').val());
+                        let stateId = cleanCode($('#StateId').val());
+                        let stateAbbreviation = $('option[value=' + stateId + ']').text();
+                        let zipCodeNumber = cleanCode($('#zipCode').val())
+                        let streetAddressElements = streetAddressOne.split(" ");
+                        let googleMapUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+                        for (let i = 0; i < streetAddressElements.length; i++) {
+                            googleMapUrl += cleanCode(streetAddressElements[i]) + '+';
+                        }
+                        googleMapUrl += cityName + '+';
+                        googleMapUrl += stateAbbreviation;
+                        googleMapUrl += '&key=AIzaSyD3F02Dr7BSQRR48YgU8akdwdR-9FsXp3w';
+                        let lat;
+                        let lng;
+
+                        console.log(googleMapUrl);
+                        $.getJSON(googleMapUrl)
+                        .done(function (data) {
+                            let location = data.results[0].geometry.location;
+                            lat = location.lat;
+                            lng = location.lng;
+                            $('#lat').val(lat);
+                            $('#lng').val(lng);
+                            $("#search").fadeOut(function () {
+                                if (typeof map !== 'undefined')
+                                {
+                                    moveMarker(lat,lng);
+                                }
+                                else {
+                                    initMap(lat, lng);
+                                }
+                                $("#map").fadeIn();
+                                $("#submitButton").fadeIn();
+                            });
+                        });
+                    }
+                    else {
+                        if (errorMessage.length > 0) {
+                            let errorMessageHtml = '<ul>\n';
+                            for (let i = 0; i < errorMessage.length; i++) {
+                                errorMessageHtml += '<li>' + errorMessage[i] + '</li>\n';
+                            }
+                            errorMessageHtml += '</ul>';
+                            $('#validationErrors').fadeOut(function () {
+                                $('#validationErrors > div').html(errorMessageHtml);
+                                $('#validationErrors').fadeIn();
+                            });
+                            event.preventDefault();
+                        }
+                    }
+                });
+
+            //Google maps api test
+            //Key: AIzaSyD3F02Dr7BSQRR48YgU8akdwdR-9FsXp3w
+
+            function initMap(latitude, longtitude) {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: { lat: latitude, lng: longtitude }
+                });
+                marker = new google.maps.Marker({
+                    position: { lat: latitude, lng: longtitude },
+                    map: map
+                });
+            }
+
+            function moveMarker(latitude, longtitude)
+            {
+                map.setCenter({ lat: latitude, lng: longtitude });
+                marker.setPosition({ lat: latitude, lng: longtitude });
+            }
+
+            function cleanCode(c) {
+                return c.replace(/[^A-Za-z0-9_]/g, "");
+            }
+
+            function validate() {
+                isValid = true;
+                if ($('#StreetOne').val() == "") {
+                    errorMessage.push("You must enter a street address.");
+                    isValid = false;
+                }
+                if ($('#City_Name').val() == "") {
+                    errorMessage.push("You must enter a city.");
+                    isValid = false;
+                }
+                if ($('#ZipCode_Number').val() == "") {
+                    errorMessage.push("You must enter a zip code.");
+                    isValid = false;
+                }
+                return isValid;
+            }
+
+        });
+    </script>
+
+
+}

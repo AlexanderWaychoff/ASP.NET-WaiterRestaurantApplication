@@ -441,7 +441,8 @@ namespace WaiterRestaurantApplication.Controllers
                 }
                 else if (isRestaurantManagerUser())
                 {
-                    return RedirectToAction("Index", "RestaurantManager");
+                    //return RedirectToAction("Index", "RestaurantManager");
+                    return RedirectToAction("Index", "Restaurant");
                 }
                 else if (isRestaurantEmployeeUser())
                 {

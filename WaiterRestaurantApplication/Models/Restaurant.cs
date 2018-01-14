@@ -22,8 +22,7 @@ namespace WaiterRestaurantApplication.Models
         public int PeopleBeforeWarning { get; set; }
         public int GracePeriodMinutes { get; set; }
 
-        //public ICollection<Employee> Employees { get; set; }
-
+        public ICollection<ApplicationUser> Employees { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; }
 
