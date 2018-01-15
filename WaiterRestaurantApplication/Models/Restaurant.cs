@@ -22,14 +22,17 @@ namespace WaiterRestaurantApplication.Models
         public int PeopleBeforeWarning { get; set; }
         public int GracePeriodMinutes { get; set; }
 
-        //public ICollection<Employee> Employees { get; set; }
-
+        public ICollection<ApplicationUser> PendingEmployees { get; set; }
+        public ICollection<ApplicationUser> ConfirmedEmployees { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; }
 
         public Subscription Subscription { get; set; }
         public int CurrentWaitMinutes { get; set; }
         //public int AverageWaitMinutes = calculate WaitMinutes
+
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
 
     }
 }

@@ -1,0 +1,33 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
+@{
+    ViewBag.Title = "Manage Employees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manage Employees</h2>
+@if (Model.ConfirmedEmployees.Count > 0)
+{
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>User Name</th>
+            <th>Email Address</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (ApplicationUser user in Model.ConfirmedEmployees)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @Html.ActionLink("Remove as Employee", "DeleteEmployee", new { restaurantId = Model.RestaurantId, userId = user.Id }, new { @class = "btn btn-danger btn-xs" })
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+else
+{
+    <p>No employees to manage.</p>
+}

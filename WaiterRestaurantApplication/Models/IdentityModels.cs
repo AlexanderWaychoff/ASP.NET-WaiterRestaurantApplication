@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 
 namespace WaiterRestaurantApplication.Models
 {
@@ -16,6 +17,10 @@ namespace WaiterRestaurantApplication.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        //Extended Properties
+        public ICollection<Restaurant> Restaurants { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -31,6 +36,12 @@ namespace WaiterRestaurantApplication.Models
         }
 
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Restaurant> Restaurants { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.City> Cities { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.State> States { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.ZipCode> ZipCodes { get; set; }
 
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Address> Addresses { get; set; }
 
