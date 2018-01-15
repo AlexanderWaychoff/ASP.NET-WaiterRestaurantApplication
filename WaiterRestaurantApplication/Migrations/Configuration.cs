@@ -25,6 +25,8 @@ namespace WaiterRestaurantApplication.Migrations
             //Note: we'll have to set up file paths for all three members of the team.
             string seedFile = "~/CSV/SeedData/states.csv";
             string filePath = GetMapPath(seedFile);
+            //alex's file path
+            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
             bool fileExists = File.Exists(filePath);
             if (fileExists)
             {
