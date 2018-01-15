@@ -10,14 +10,25 @@
 
 @if(Model.Count() > 0)
 {
-    foreach(Restaurant restaurant in Model)
-    {
-        <p>@restaurant.RestaurantName</p>
-    }
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
+                <p class="text-center">You are a confirmed employee at the following restaurants.<br />Click to manage wait lists.</p>
+                @foreach (Restaurant restaurant in Model)
+                {
+                <p>
+                    @Html.ActionLink("Manage " + @restaurant.RestaurantName + " Wait List", "ManageTableVisits", "Restaurant", routeValues: new { restaurantId = @restaurant.RestaurantId }, htmlAttributes: new { @class = "btn btn-default btn-block" })
+                </p>
+                }
+            </div>
+        </div>
+    </div>
 }
 else {
     <p>You are not a confirmed employee at one of our member restaurants.</p>
-    <p>
-        @Html.ActionLink("Confirm your Employment", "ConfirmEmployment", "Restaurant", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
-    </p>
 }
+<hr />
+<p>
+    @Html.ActionLink("Confirm your Employment", "ConfirmEmployment", "Restaurant", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+</p>
+

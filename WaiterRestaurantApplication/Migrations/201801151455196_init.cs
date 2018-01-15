@@ -172,18 +172,18 @@ namespace WaiterRestaurantApplication.Migrations
                         DinerPhone = c.String(),
                         CreatedOn = c.DateTime(nullable: false),
                         WaitMinutes = c.Int(nullable: false),
-                        WeatherConditionId = c.Int(nullable: false),
+                        WeatherConditionId = c.Int(),
                         IsHostEntry = c.Boolean(nullable: false),
-                        IsSatisfied = c.Boolean(nullable: false),
+                        IsSatisfied = c.Boolean(),
                         PartySize = c.Int(nullable: false),
                         IsWarned = c.Boolean(nullable: false),
-                        GracePeriodStart = c.DateTime(nullable: false),
-                        IsNoShow = c.Boolean(nullable: false),
+                        GracePeriodStart = c.DateTime(),
+                        IsNoShow = c.Boolean(),
                         IsActive = c.Boolean(nullable: false),
                         Restaurant_RestaurantId = c.Int(),
                     })
                 .PrimaryKey(t => t.TableVisitId)
-                .ForeignKey("dbo.WeatherConditions", t => t.WeatherConditionId, cascadeDelete: true)
+                .ForeignKey("dbo.WeatherConditions", t => t.WeatherConditionId)
                 .ForeignKey("dbo.Restaurants", t => t.Restaurant_RestaurantId)
                 .Index(t => t.WeatherConditionId)
                 .Index(t => t.Restaurant_RestaurantId);

@@ -1,0 +1,20 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
+@{
+    ViewBag.Title = "Manage " + @Model.RestaurantName + " Wait List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manage @Model.RestaurantName Wait List</h2>
+
+@if(Model.TableVisits.Count > 0)
+{
+    //list all of the diners on the list...
+}
+else
+{
+    <p>There are currently no diners on your wait list.</p>
+    <p>
+        @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit",  new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-primary" })
+    </p>
+}
