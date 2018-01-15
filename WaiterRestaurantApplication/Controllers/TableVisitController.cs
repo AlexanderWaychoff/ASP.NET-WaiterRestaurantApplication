@@ -37,10 +37,23 @@ namespace WaiterRestaurantApplication.Controllers
         }
 
         // GET: TableVisit/Create
-        public ActionResult Create()
+        public ActionResult Create(int restaurantId)
         {
-            ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription");
-            return View();
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.TableVisits)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            return View(restaurant);
         }
 
         // POST: TableVisit/Create
@@ -48,17 +61,47 @@ namespace WaiterRestaurantApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TableVisitId,DinerName,DinerPhone,CreatedOn,WaitMinutes,WeatherConditionId,IsHostEntry,IsSatisfied,PartySize,IsWarned,GracePeriodStart,IsNoShow,IsActive")] TableVisit tableVisit)
+        //public ActionResult Create([Bind(Include = "TableVisitId,DinerName,DinerPhone,CreatedOn,WaitMinutes,WeatherConditionId,IsHostEntry,IsSatisfied,PartySize,IsWarned,GracePeriodStart,IsNoShow,IsActive")] TableVisit tableVisit)
+        public ActionResult Create(int restaurantId, bool isHostEntry, string dinerName, string dinerPhone, int partySize)
         {
-            if (ModelState.IsValid)
-            {
-                db.TableVisits.Add(tableVisit);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription", tableVisit.WeatherConditionId);
-            return View(tableVisit);
+            //TO DO: ADD VALIDATION USING THE IF STATEMENT BELOW:
+            //if (ModelState.IsValid)
+            //{
+            //}
+
+            var restaurant = db.Restaurants
+                .Include(r => r.TableVisits)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
+            //Alex...add your magic below...
+            //need to get weather condition first - It cannot be nullable
+            //dummy weather condition:
+            WeatherCondition weatherCondition = new WeatherCondition();
+            weatherCondition.Temperature = 75;
+            weatherCondition.WeatherDescription = "Partly Cloudy";
+
+
+            TableVisit tableVisit = new TableVisit();
+            tableVisit.DinerName = dinerName;
+            tableVisit.DinerPhone = dinerPhone;
+            tableVisit.CreatedOn = DateTime.Now;
+            tableVisit.WeatherCondition = weatherCondition;
+            tableVisit.IsHostEntry = isHostEntry;
+            tableVisit.PartySize = partySize;
+            tableVisit.IsWarned = false;
+            tableVisit.IsNoShow = false;
+            tableVisit.IsActive = true;
+            db.TableVisits.Add(tableVisit);
+            db.SaveChanges();
+
+            restaurant.TableVisits.Add(tableVisit);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
+            //ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription", tableVisit.WeatherConditionId);
+            return View(restaurant);
         }
 
         // GET: TableVisit/Edit/5
