@@ -24,6 +24,8 @@ namespace WaiterRestaurantApplication.Migrations
             //Seed States table with all US States
             string seedFile = "~/CSV/SeedData/states.csv";
             string filePath = GetMapPath(seedFile);
+            //alex's file path
+            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
             bool fileExists = File.Exists(filePath);
             if (fileExists)
             {
