@@ -22,12 +22,20 @@ namespace WaiterRestaurantApplication.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var restaurant = db.Restaurants
-                .Include(r => r.TableVisits)
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
+            
             //Need a view model with a restaurant and a list of table visits so we can do "orderby"
+            var tableVisits = db.TableVisits
+                .Where(t => t.RestaurantId == restaurantId)
+                .OrderBy(t => t.CreatedOn)
+                .ToList();
 
-            return View(restaurant);
+            TableVisitIndexViewModel viewModel = new TableVisitIndexViewModel();
+            viewModel.Restaurant = restaurant;
+            viewModel.TableVisits = tableVisits;
+
+            return View(viewModel);
         }
 
         // GET: TableVisit/Details/5
@@ -102,6 +110,7 @@ namespace WaiterRestaurantApplication.Controllers
             tableVisit.IsWarned = false;
             tableVisit.IsNoShow = false;
             tableVisit.IsActive = true;
+            tableVisit.RestaurantId = restaurantId;
             db.TableVisits.Add(tableVisit);
             db.SaveChanges();
 
