@@ -413,5 +413,24 @@ namespace WaiterRestaurantApplication.Controllers
             return RedirectToAction("Index", "Restaurant");
         }
 
+        public ActionResult SetWaitMinutes(int currentWaitMinutes, int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            restaurant.CurrentWaitMinutes = currentWaitMinutes;
+            db.SaveChanges();
+            return RedirectToAction("Index", "Restaurant");
+        }
+
     }
 }
