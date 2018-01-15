@@ -24,7 +24,7 @@ namespace WaiterRestaurantApplication.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
-            WeatherJSONReader.Deserialize();
+            Models.WeatherCondition weatherCondition = new Models.WeatherCondition();
 
             return View();
         }
