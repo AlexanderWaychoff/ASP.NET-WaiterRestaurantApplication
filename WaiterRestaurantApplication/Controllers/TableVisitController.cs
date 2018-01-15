@@ -34,6 +34,10 @@ namespace WaiterRestaurantApplication.Controllers
             viewModel.Restaurant = restaurant;
             viewModel.TableVisits = tableVisits;
 
+            if (TempData["tableVisitMessage"] != null)
+            {
+                ViewBag.infoMessage = TempData["tableVisitMessage"].ToString();
+            }
             return View(viewModel);
         }
 
@@ -115,10 +119,8 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
+            TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
             return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId});
-
-            //ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription", tableVisit.WeatherConditionId);
-            return View(restaurant);
         }
 
         // GET: TableVisit/Edit/5

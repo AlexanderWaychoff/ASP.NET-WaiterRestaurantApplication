@@ -429,7 +429,8 @@ namespace WaiterRestaurantApplication.Controllers
                 .FirstOrDefault();
             restaurant.CurrentWaitMinutes = currentWaitMinutes;
             db.SaveChanges();
-            return RedirectToAction("Index", "Restaurant");
+            TempData["tableVisitMessage"] = "Wait time updated to " + currentWaitMinutes + " minutes.";
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId } );
         }
 
     }

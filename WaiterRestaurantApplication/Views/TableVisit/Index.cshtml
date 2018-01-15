@@ -7,7 +7,7 @@
 }
 
 <h2>@Model.Restaurant.RestaurantName Wait List</h2>
-
+<div class="alert alert-info" role="alert" id="infoMessage" style="display: none;">@ViewBag.infoMessage</div>
 <form class="form-inline" action="/Restaurant/SetWaitMinutes">
     <div class="form-group">
         <label class="sr-only" for="exampleInputEmail3">Current Wait Time</label>
@@ -47,4 +47,18 @@
 else
 {
     <p class="text-danger">There are currently no diners on your wait list.</p>
+}
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log($("#infoMessage").text().length);
+            if ($("#infoMessage").text().length > 0) {
+                $("#infoMessage").fadeIn();
+                setTimeout(function () {
+                    $('#infoMessage').fadeOut();
+                }, 2000);
+            }
+        });
+    </script>
 }
