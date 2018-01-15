@@ -24,5 +24,7 @@ namespace WaiterRestaurantApplication.Models
         public bool? IsNoShow { get; set; }
         public bool IsActive { get; set; }
 
+        public int RestaurantId { get; set; }
+
     }
 }

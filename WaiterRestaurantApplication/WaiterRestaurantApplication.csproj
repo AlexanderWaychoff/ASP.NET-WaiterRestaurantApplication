@@ -241,6 +241,7 @@
     <Compile Include="Models\Subscription.cs" />
     <Compile Include="Models\SubscriptionType.cs" />
     <Compile Include="Models\TableVisit.cs" />
+    <Compile Include="Models\TableVisitViewModels.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\WeatherCondition.cs" />
     <Compile Include="Models\ZipCode.cs" />

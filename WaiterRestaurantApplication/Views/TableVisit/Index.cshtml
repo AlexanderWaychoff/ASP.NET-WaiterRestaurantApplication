@@ -1,14 +1,14 @@
 ﻿@using WaiterRestaurantApplication.Models;
-@model WaiterRestaurantApplication.Models.Restaurant
+@model WaiterRestaurantApplication.Models.TableVisitIndexViewModel
 
 @{
-    ViewBag.Title = @Model.RestaurantName + "Wait List";
+    ViewBag.Title = @Model.Restaurant.RestaurantName + "Wait List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.RestaurantName Wait List</h2>
+<h2>@Model.Restaurant.RestaurantName Wait List</h2>
 <p>
-    @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.Restaurant.RestaurantId }, new { @class = "btn btn-primary" })
 </p>
 @if (Model.TableVisits.Count > 0)
 {
@@ -36,5 +36,5 @@
 }
 else
 {
-    <p>There are currently no diners on your wait list.</p>
+    <p class="text-danger">There are currently no diners on your wait list.</p>
 }
