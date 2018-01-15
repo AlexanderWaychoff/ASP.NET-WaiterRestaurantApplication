@@ -22,6 +22,7 @@ namespace WaiterRestaurantApplication.Migrations
         protected override void Seed(WaiterRestaurantApplication.Models.ApplicationDbContext context)
         {
             //Seed States table with all US States
+            //Note: we'll have to set up file paths for all three members of the team.
             string seedFile = "~/CSV/SeedData/states.csv";
             string filePath = GetMapPath(seedFile);
             bool fileExists = File.Exists(filePath);
