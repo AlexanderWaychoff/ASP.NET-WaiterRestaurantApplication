@@ -25,7 +25,6 @@ namespace WaiterRestaurantApplication.Controllers
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
             
-            //Need a view model with a restaurant and a list of table visits so we can do "orderby"
             var tableVisits = db.TableVisits
                 .Where(t => t.RestaurantId == restaurantId)
                 .OrderBy(t => t.CreatedOn)
