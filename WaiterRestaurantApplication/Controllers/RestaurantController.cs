@@ -413,24 +413,5 @@ namespace WaiterRestaurantApplication.Controllers
             return RedirectToAction("Index", "Restaurant");
         }
 
-        public ActionResult ManageTableVisits(int restaurantId)
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (!User.IsInRole("RestaurantEmployee"))
-            {
-                return HttpNotFound();
-            }
-
-            var restaurant = db.Restaurants
-                .Include(r => r.TableVisits)
-                .Where(r => r.RestaurantId == restaurantId)
-                .FirstOrDefault();
-            return View(restaurant);
-        }
-
-
     }
 }
