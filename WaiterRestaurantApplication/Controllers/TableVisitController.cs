@@ -79,8 +79,8 @@ namespace WaiterRestaurantApplication.Controllers
             //need to get weather condition first - It cannot be nullable
             //dummy weather condition:
             WeatherCondition weatherCondition = new WeatherCondition();
-            weatherCondition.Temperature = 75;
-            weatherCondition.WeatherDescription = "Partly Cloudy";
+            //weatherCondition.Temperature = 75;
+            //weatherCondition.WeatherDescription = "Partly Cloudy";
 
 
             TableVisit tableVisit = new TableVisit();
