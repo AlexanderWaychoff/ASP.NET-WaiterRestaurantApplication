@@ -15,10 +15,19 @@ namespace WaiterRestaurantApplication.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TableVisit
-        public ActionResult Index()
+        public ActionResult Index(int restaurantId)
         {
-            var tableVisits = db.TableVisits.Include(t => t.WeatherCondition);
-            return View(tableVisits.ToList());
+            if (restaurantId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var restaurant = db.Restaurants
+                .Include(r => r.TableVisits)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            //Need a view model with a restaurant and a list of table visits so we can do "orderby"
+
+            return View(restaurant);
         }
 
         // GET: TableVisit/Details/5
@@ -98,7 +107,7 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId});
 
             //ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription", tableVisit.WeatherConditionId);
             return View(restaurant);

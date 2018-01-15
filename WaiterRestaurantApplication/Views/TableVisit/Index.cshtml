@@ -1,100 +1,40 @@
-﻿@model IEnumerable<WaiterRestaurantApplication.Models.TableVisit>
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = @Model.RestaurantName + "Wait List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
+<h2>@Model.RestaurantName Wait List</h2>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-primary" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.WeatherCondition.WeatherDescription)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DinerName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DinerPhone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WaitMinutes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsHostEntry)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsSatisfied)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PartySize)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsWarned)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GracePeriodStart)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsNoShow)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </th>
-        <th></th>
-    </tr>
+@if (Model.TableVisits.Count > 0)
+{
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Diner Name</th>
+            <th>Party Size</th>
+            <th>Phone Number</th>
+            <th>Actions</th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.WeatherCondition.WeatherDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DinerName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DinerPhone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WaitMinutes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsHostEntry)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsSatisfied)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PartySize)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsWarned)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GracePeriodStart)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsNoShow)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TableVisitId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TableVisitId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TableVisitId })
-        </td>
-    </tr>
+        @foreach (TableVisit tableVisit in Model.TableVisits)
+        {
+            <tr>
+                <td>@tableVisit.DinerName</td>
+                <td>@tableVisit.PartySize</td>
+                <td>@String.Format("{0:(###) ###-####}", Convert.ToInt64(tableVisit.DinerPhone))</td>
+                <td>
+                    @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-success btn-xs" })
+                    @Html.ActionLink("Remove from Wait List", "RemoveFromLine", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-danger btn-xs" })
+                </td>
+            </tr>    
+        }
+    </table>
 }
-
-</table>
+else
+{
+    <p>There are currently no diners on your wait list.</p>
+}

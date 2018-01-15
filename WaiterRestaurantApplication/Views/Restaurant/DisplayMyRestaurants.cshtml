@@ -17,7 +17,7 @@
                 @foreach (Restaurant restaurant in Model)
                 {
                 <p>
-                    @Html.ActionLink("Manage " + @restaurant.RestaurantName + " Wait List", "ManageTableVisits", "Restaurant", routeValues: new { restaurantId = @restaurant.RestaurantId }, htmlAttributes: new { @class = "btn btn-default btn-block" })
+                    @Html.ActionLink("Manage " + @restaurant.RestaurantName + " Wait List", "Index", "TableVisit", routeValues: new { restaurantId = @restaurant.RestaurantId }, htmlAttributes: new { @class = "btn btn-default btn-block" })
                 </p>
                 }
             </div>
