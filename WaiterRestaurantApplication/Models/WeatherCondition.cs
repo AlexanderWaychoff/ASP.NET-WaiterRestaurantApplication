@@ -12,9 +12,9 @@ namespace WaiterRestaurantApplication.Models
         public int Temperature { get; set; }
         public string WeatherDescription { get; set; }
 
-        public WeatherCondition()
+        public WeatherCondition(string cityName)
         {
-            string json = WeatherJSONReader.GetJsonString();
+            string json = WeatherJSONReader.GetJsonString(cityName);
             JObject jObject = JObject.Parse(json);
             JToken jWeather = jObject["weather"];
             JToken jMain = jObject["main"];

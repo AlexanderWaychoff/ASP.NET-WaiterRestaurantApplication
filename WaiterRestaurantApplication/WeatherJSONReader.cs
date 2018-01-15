@@ -23,11 +23,11 @@ namespace WaiterRestaurantApplication
             OpenWeatherMain main = new OpenWeatherMain(Json);
             return;
         }
-        public static string GetJsonString()
+        public static string GetJsonString(string cityName)
         {
             try
             {
-                string Json = client.DownloadString("http://api.openweathermap.org/data/2.5/weather?q=milwaukee&appid=5779a8c61a125dd73ee705c06d68a347");
+                string Json = client.DownloadString("http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=5779a8c61a125dd73ee705c06d68a347");
                 return Json;
             }
             catch (Exception e)
