@@ -37,9 +37,9 @@ namespace WaiterRestaurantApplication
         }
         public static int ConvertToFahrenheit(string temp)
         {
-            int temperature = Convert.ToInt32(temp);
-            int roundedTemperature = Convert.ToInt32(temperature * 9 / 5 - 459.67);
-            return 0;
+            int temperature = Convert.ToInt32(Math.Round(Convert.ToDouble(temp)));
+            int roundedTemperature = Convert.ToInt32(Math.Round((temperature * 9 / 5 - 459.67)));
+            return roundedTemperature;
         }
     }
 }
