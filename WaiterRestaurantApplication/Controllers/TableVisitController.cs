@@ -191,16 +191,16 @@ namespace WaiterRestaurantApplication.Controllers
 
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table is ready!");
             currentTableVisit.GracePeriodStart = DateTime.Now;
-            currentTableVisit.WaitMinutes = calculateWaitTime(currentTableVisit);
+            //currentTableVisit.WaitMinutes = calculateWaitTime(currentTableVisit);
 
             return RedirectToAction("Index");
 
         }
 
-        private DateTime calculateWaitTime(TableVisit currentTableVisit)
-        {
-            return ((System.Math.Abs(currentTableVisit.GracePeriodStart.Subtract(currentTableVisit.CreatedOn)))/60);
-        }
+        //private DateTime calculateWaitTime(TableVisit currentTableVisit)
+        //{
+            //return ((System.Math.Abs(currentTableVisit.GracePeriodStart.Subtract(currentTableVisit.CreatedOn)))/60);
+        //}
         public ActionResult RemoveFromLine(TableVisit currentTableVisit)
         {
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Grace period has expired. You have lost your reservation.");
