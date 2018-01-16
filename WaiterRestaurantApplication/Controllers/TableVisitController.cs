@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WaiterRestaurantApplication.Models;
@@ -191,23 +192,34 @@ namespace WaiterRestaurantApplication.Controllers
 
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table is ready!");
             currentTableVisit.GracePeriodStart = DateTime.Now;
-            currentTableVisit.WaitMinutes = calculateWaitTime(currentTableVisit);
 
             return RedirectToAction("Index");
 
         }
 
-        private DateTime calculateWaitTime(TableVisit currentTableVisit)
+        public ActionResult WarnDiner(TableVisit currentTableVisit)
         {
-            return ((System.Math.Abs(currentTableVisit.GracePeriodStart.Subtract(currentTableVisit.CreatedOn)))/60);
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table will be ready Soon!" );
+            currentTableVisit.IsWarned = true;
+            return RedirectToAction("Index");
         }
+
+        private int calculateWaitTime(TableVisit currentTableVisit)
+        {
+
+            DateTime gracePeriod = currentTableVisit.GracePeriodStart.Value;
+
+            return (int) (gracePeriod.Subtract(currentTableVisit.CreatedOn).TotalMinutes);
+        }
+
         public ActionResult RemoveFromLine(TableVisit currentTableVisit)
         {
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Grace period has expired. You have lost your reservation.");
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
             db.TableVisits.Remove(currentTableVisit);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -215,6 +227,59 @@ namespace WaiterRestaurantApplication.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public void ManageTableVisitTime()
+        {
+            var startTimeSpan = TimeSpan.Zero;
+            var periodTimeSpan = TimeSpan.FromMinutes(1);
+
+            var timer = new System.Threading.Timer((e) =>
+            {
+                foreach (var resturant in db.Restaurants)
+                {
+
+                    Parallel.Invoke(
+                        () =>CheckForDinersToWarn(resturant.TableVisits, resturant),
+                        () =>CheckForExpiredGracePeriod(resturant.TableVisits, resturant)
+                    );
+                }
+            }, null, startTimeSpan, periodTimeSpan);
+        }
+
+        private void CheckForDinersToWarn(List<TableVisit> tableVisits, Restaurant resturant)
+        {
+            int peopleInLine = 0;
+            for(int i =0; i < tableVisits.Count; i++)
+            {
+                if(!tableVisits[i].IsWarned && tableVisits[i].IsActive)
+                {
+                    peopleInLine += tableVisits[i].PartySize;
+                    if(peopleInLine >= resturant.PeopleBeforeWarning)
+                    {
+                        WarnDiner(tableVisits[i+1]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void CheckForExpiredGracePeriod(List<TableVisit> tableVisits, Restaurant resturant)
+        {
+            for(int i=0;i< tableVisits.Count; i++)
+            {
+                if(tableVisits[i].IsActive && tableVisits[i].GracePeriodStart != null)
+                {
+                    DateTime gracePeriodStart = tableVisits[i].GracePeriodStart.Value;
+                    if (gracePeriodStart.AddMinutes(resturant.GracePeriodMinutes) == DateTime.Now)
+                    {
+                        messenger.SendSMSMessage(tableVisits[i].DinerPhone, "Your Grace period has expired. You have lost your reservation.");
+                        tableVisits[i].IsActive = false;
+                        RemoveFromLine(tableVisits[i]);
+                        tableVisits[i].IsNoShow = true;
+                    }
+                }
+            }
         }
     }
 }
