@@ -26,7 +26,7 @@ namespace WaiterRestaurantApplication.Migrations
             string seedFile = "~/CSV/SeedData/";//states.csv removed from end of seedFile
             string filePath = GetMapPath(seedFile);
             //alex's file path
-            filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
+            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
             bool fileExists = File.Exists(filePath + "states.csv");
             if (fileExists)
             {
