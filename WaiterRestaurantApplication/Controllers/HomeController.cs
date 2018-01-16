@@ -10,6 +10,10 @@ namespace WaiterRestaurantApplication.Controllers
     {
         public ActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
 
@@ -23,8 +27,6 @@ namespace WaiterRestaurantApplication.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
-            Models.WeatherCondition weatherCondition = new Models.WeatherCondition();
 
             return View();
         }

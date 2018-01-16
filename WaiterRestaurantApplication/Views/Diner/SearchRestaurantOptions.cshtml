@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "SearchRestaurantsNearDiner";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SearchRestaurantOptions</title>
+</head>
+<body>
+    <div> 
+        <h4>Search restaurants near your current location?  Or insert an address.</h4>
+        <p><a @Html.ActionLink("Restaurants near me", "SearchRestaurantsNearDiner", "Diner", null, new { @class = "btn btn-success btn-xs" })</a></p>
+        <p><a @Html.ActionLink("Enter an Address", "SearchRestaurantsNearDiner", "Diner", null, new { @class = "btn btn-success btn-xs" })</a></p>
+    </div>
+</body>
+</html>

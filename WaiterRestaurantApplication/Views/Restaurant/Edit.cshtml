@@ -1,85 +1,117 @@
 ﻿@model WaiterRestaurantApplication.Models.Restaurant
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Restaurant Settings";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Settings for @Model.RestaurantName</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
+    <input type="hidden" name="lat" value="@Model.Address.Lat" />
+    <input type="hidden" name="lng" value="@Model.Address.Lng" />
+    <input type="hidden" name="restaurantId" value="@Model.RestaurantId" />
     <div class="form-horizontal">
-        <h4>Restaurant</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.RestaurantId)
-
         <div class="form-group">
-            @Html.LabelFor(model => model.RestaurantName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Restaurant Name</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.RestaurantName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RestaurantName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.AddressId, "AddressId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Address</label>
             <div class="col-md-10">
-                @Html.DropDownList("AddressId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddressId, "", new { @class = "text-danger" })
+                <input class="form-control text-box single-line" id="streetOne" name="streetOne" type="text" value="@Model.Address.StreetOne">
+                @Html.ValidationMessageFor(model => model.Address.StreetOne, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.OpenTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OpenTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OpenTime, "", new { @class = "text-danger" })
+                <input class="form-control text-box single-line" id="streetTwo" name="streetTwo" type="text" value="@Model.Address.StreetTwo">
+                @Html.ValidationMessageFor(model => model.Address.StreetOne, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CloseTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">City</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CloseTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CloseTime, "", new { @class = "text-danger" })
+                <input class="form-control text-box single-line" id="city" name="city" type="text" value="@Model.Address.City.Name">
+                @Html.ValidationMessageFor(model => model.Address.City.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsOpen, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">State</label>
             <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsOpen)
-                    @Html.ValidationMessageFor(model => model.IsOpen, "", new { @class = "text-danger" })
+                @Html.DropDownList("StateId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Zip Code</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" id="zipCode" name="zipCode" type="text" value="@Model.Address.ZipCode.Number">
+                @Html.ValidationMessageFor(model => model.Address.ZipCode.Number, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Open Time</label>
+            <div class="col-md-10">
+                <div class="input-group bootstrap-timepicker timepicker">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                    <input type="text" class="form-control input-small" id="openTime" name="openTime" style="width: 231px;">
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PeopleBeforeWarning, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Close Time</label>
+            <div class="col-md-10">
+                <div class="input-group bootstrap-timepicker timepicker">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                    <input type="text" class="form-control input-small" id="closeTime" name="closeTime" style="width: 231px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Open-for-Business?</label>
+            <div class="col-md-10">
+                <div class="checkbox">
+                    <label>
+                    @Html.EditorFor(model => model.IsOpen)
+                    </label>
+                    @Html.ValidationMessageFor(model => model.IsOpen, "", new { @class = "text-danger" })
+                </div>
+                <span id="helpBlock" class="help-block">Going on vacation or doing some construction? You can temporarily close-for-business.</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">People Before Warning</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.PeopleBeforeWarning, new { htmlAttributes = new { @class = "form-control" } })
+                <span id="helpBlock" class="help-block">The number of people ahead of each diner before they are sent a message letting them know their table is almost ready.</span>
                 @Html.ValidationMessageFor(model => model.PeopleBeforeWarning, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.GracePeriodMinutes, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Grace Period Minutes</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.GracePeriodMinutes, new { htmlAttributes = new { @class = "form-control" } })
+                <span id="helpBlock" class="help-block">The number of minutes after a diner is considered a "no-show."</span>
                 @Html.ValidationMessageFor(model => model.GracePeriodMinutes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CurrentWaitMinutes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CurrentWaitMinutes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CurrentWaitMinutes, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -90,7 +122,37 @@
         </div>
     </div>
 }
+@section scripts{
+    <script type="text/javascript">
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+        $(document).ready(function () {
+            $("#StateId option").each(function(e) {
+                if ($(this).val() == "@Model.Address.StateId") {
+                    $(this).attr("selected", "selected");
+                }
+            });
+
+            @{
+                string openTime = "false";
+                string closeTime = "false";
+            }
+            @if(Model.OpenTime != null)
+            {
+                openTime = "'" + Model.OpenTime + "'";
+            }
+            @if(Model.CloseTime != null)
+            {
+                closeTime = "'" + Model.CloseTime + "'";
+            }
+            $('#openTime').timepicker({
+                defaultTime: @openTime
+                });
+            $('#closeTime').timepicker({
+                defaultTime: @closeTime
+                });
+
+        });
+
+    </script>
+
+}

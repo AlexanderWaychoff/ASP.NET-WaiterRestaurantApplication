@@ -17,7 +17,7 @@ namespace WaiterRestaurantApplication.Controllers
         private MessengerController messenger = new MessengerController();
 
         // GET: TableVisit
-        public ActionResult Index(int restaurantId)
+        public ActionResult Index(int? restaurantId)
         {
             if (restaurantId == null)
             {
@@ -94,13 +94,15 @@ namespace WaiterRestaurantApplication.Controllers
 
             var restaurant = db.Restaurants
                 .Include(r => r.TableVisits)
+                .Include(r => r.Address.City)
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
 
             //Alex...add your magic below...
+            string cityName = restaurant.Address.City.Name;
             //need to get weather condition first - It cannot be nullable
             //dummy weather condition:
-            WeatherCondition weatherCondition = new WeatherCondition();
+            WeatherCondition weatherCondition = new WeatherCondition(cityName);
             //weatherCondition.Temperature = 75;
             //weatherCondition.WeatherDescription = "Partly Cloudy";
 
