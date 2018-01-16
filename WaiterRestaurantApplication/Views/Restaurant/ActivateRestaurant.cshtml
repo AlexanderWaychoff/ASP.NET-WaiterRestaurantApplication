@@ -1,0 +1,37 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
+
+@{
+    ViewBag.Title = "Activate " + Model.RestaurantName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Activate @Model.RestaurantName</h2>
+
+<p>To activate your restaurant and show up in the Waiter search results, you must first sign up for a monthly or annual subscription.</p>
+<hr />
+<h3>Monthly Subscription: $9.99/month</h3>
+<form action="/Stripe/ChargeMonthly" method="POST">
+    <input type="hidden" name="restaurantId" value="@Model.RestaurantId"/>
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_ata9mq4hHm1XWwGFU7InLmsX"
+            @*data-image="/images/marketplace.png"*@
+            data-name="Waiter"
+            data-description="Monthly Subscription"
+            data-amount="999"
+            data-label="Sign Up for Monthly Subscription">
+    </script>
+</form>
+<hr />
+<h3>Annual Subscription: $110.00/year <span class="label label-success">SAVE 10%</span></h3>
+<form action="/Stripe/ChargeAnnual" method="POST">
+    <input type="hidden" name="restaurantId" value="@Model.RestaurantId" />
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_ata9mq4hHm1XWwGFU7InLmsX"
+            @*data-image="/images/marketplace.png"*@
+            data-name="Waiter"
+            data-description="Annual Subscription"
+            data-amount="11000"
+            data-label="Sign Up for Annual Subscription">
+    </script>
+</form>
