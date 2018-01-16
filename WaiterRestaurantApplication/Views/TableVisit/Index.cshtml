@@ -7,7 +7,17 @@
 }
 
 <h2>@Model.Restaurant.RestaurantName Wait List</h2>
-<p>
+<div class="alert alert-info" role="alert" id="infoMessage" style="display: none;">@ViewBag.infoMessage</div>
+<form class="form-inline" action="/Restaurant/SetWaitMinutes">
+    <div class="form-group">
+        <label class="sr-only" for="exampleInputEmail3">Current Wait Time</label>
+        <input type="hidden" name="restaurantId" value="@Model.Restaurant.RestaurantId" />
+        <input type="number" class="form-control" id="currentWaitMinutes" name="currentWaitMinutes" value="@Model.Restaurant.CurrentWaitMinutes">
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Set Wait Time</button>
+</form>
+
+<p style="margin-top: 20px;">
     @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.Restaurant.RestaurantId }, new { @class = "btn btn-primary" })
 </p>
 @if (Model.TableVisits.Count > 0)
@@ -27,7 +37,7 @@
                 <td>@tableVisit.PartySize</td>
                 <td>@String.Format("{0:(###) ###-####}", Convert.ToInt64(tableVisit.DinerPhone))</td>
                 <td>
-                    @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-success btn-xs" })
+                    @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisit = tableVisit }, new { @class = "btn btn-success btn-xs" })
                     @Html.ActionLink("Remove from Wait List", "RemoveFromLine", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-danger btn-xs" })
                 </td>
             </tr>    
@@ -37,4 +47,18 @@
 else
 {
     <p class="text-danger">There are currently no diners on your wait list.</p>
+}
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log($("#infoMessage").text().length);
+            if ($("#infoMessage").text().length > 0) {
+                $("#infoMessage").fadeIn();
+                setTimeout(function () {
+                    $('#infoMessage').fadeOut();
+                }, 2000);
+            }
+        });
+    </script>
 }

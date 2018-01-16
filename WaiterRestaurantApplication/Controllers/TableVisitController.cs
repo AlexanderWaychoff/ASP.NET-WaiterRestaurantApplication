@@ -13,6 +13,7 @@ namespace WaiterRestaurantApplication.Controllers
     public class TableVisitController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private MessengerController messenger = new MessengerController();
 
         // GET: TableVisit
         public ActionResult Index(int restaurantId)
@@ -34,6 +35,10 @@ namespace WaiterRestaurantApplication.Controllers
             viewModel.Restaurant = restaurant;
             viewModel.TableVisits = tableVisits;
 
+            if (TempData["tableVisitMessage"] != null)
+            {
+                ViewBag.infoMessage = TempData["tableVisitMessage"].ToString();
+            }
             return View(viewModel);
         }
 
@@ -117,10 +122,8 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
+            TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
             return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId});
-
-            //ViewBag.WeatherConditionId = new SelectList(db.WeatherConditions, "WeatherConditionId", "WeatherDescription", tableVisit.WeatherConditionId);
-            return View(restaurant);
         }
 
         // GET: TableVisit/Edit/5
@@ -182,6 +185,29 @@ namespace WaiterRestaurantApplication.Controllers
             return RedirectToAction("Index");
         }
 
+
+        public ActionResult SendTableReadyNotification(TableVisit currentTableVisit)
+        {
+
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table is ready!");
+            currentTableVisit.GracePeriodStart = DateTime.Now;
+            currentTableVisit.WaitMinutes = calculateWaitTime(currentTableVisit);
+
+            return RedirectToAction("Index");
+
+        }
+
+        private DateTime calculateWaitTime(TableVisit currentTableVisit)
+        {
+            return ((System.Math.Abs(currentTableVisit.GracePeriodStart.Subtract(currentTableVisit.CreatedOn)))/60);
+        }
+        public ActionResult RemoveFromLine(TableVisit currentTableVisit)
+        {
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Grace period has expired. You have lost your reservation.");
+            db.TableVisits.Remove(currentTableVisit);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

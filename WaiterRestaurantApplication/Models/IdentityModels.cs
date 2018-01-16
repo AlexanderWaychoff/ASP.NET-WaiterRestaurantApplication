@@ -37,6 +37,10 @@ namespace WaiterRestaurantApplication.Models
 
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Restaurant> Restaurants { get; set; }
 
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.Subscription> Subscriptions { get; set; }
+
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.SubscriptionType> SubscriptionTypes { get; set; }
+
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.City> Cities { get; set; }
 
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.State> States { get; set; }

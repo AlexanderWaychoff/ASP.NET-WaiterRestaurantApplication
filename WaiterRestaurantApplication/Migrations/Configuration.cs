@@ -22,6 +22,7 @@ namespace WaiterRestaurantApplication.Migrations
         protected override void Seed(WaiterRestaurantApplication.Models.ApplicationDbContext context)
         {
             //Seed States table with all US States
+            //Note: we'll have to set up file paths for all three members of the team.
             string seedFile = "~/CSV/SeedData/states.csv";
             string filePath = GetMapPath(seedFile);
             //alex's file path
@@ -50,20 +51,21 @@ namespace WaiterRestaurantApplication.Migrations
                     }
                 }
                 context.States.AddOrUpdate(c => c.Abbreviation, states.ToArray());
-
-                //  This method will be called after migrating to the latest version.
-
-                //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-                //  to avoid creating duplicate seed data. E.g.
-                //
-                //    context.People.AddOrUpdate(
-                //      p => p.FullName,
-                //      new Person { FullName = "Andrew Peters" },
-                //      new Person { FullName = "Brice Lambson" },
-                //      new Person { FullName = "Rowan Miller" }
-                //    );
-                //
             }
+
+            //Seed the subscription types
+            SubscriptionType monthlySubscription = new SubscriptionType();
+            monthlySubscription.Name = "Monthly Subscription";
+            monthlySubscription.Price = 9.99d;
+
+            SubscriptionType annualSubscription = new SubscriptionType();
+            annualSubscription.Name = "Annual Subscription";
+            annualSubscription.Price = 110.00d;
+
+            context.SubscriptionTypes.Add(monthlySubscription);
+            context.SubscriptionTypes.Add(annualSubscription);
+            context.SaveChanges();
+
         }
 
         private string GetMapPath(string seedFile)

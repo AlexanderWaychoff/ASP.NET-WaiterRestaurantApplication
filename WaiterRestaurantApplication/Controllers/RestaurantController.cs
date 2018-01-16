@@ -34,14 +34,31 @@ namespace WaiterRestaurantApplication.Controllers
             }
 
             //User is Restaurant Manager
+            //set up a viewModel with both active and inactive restaurants
             var userId = User.Identity.GetUserId();
-            var restaurants = db.Restaurants
+            var activeRestaurants = db.Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.PendingEmployees)
                 .Include(r => r.ConfirmedEmployees)
+                .Include(r => r.Subscription)
                 .Where(r => r.UserId == userId)
+                .Where(r => r.Subscription.IsActive == true)
                 .ToList();
-            return View(restaurants);
+
+            var inactiveRestaurants = db.Restaurants
+                .Include(r => r.Address)
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
+                .Include(r => r.Subscription)
+                .Where(r => r.UserId == userId)
+                .Where(r => r.Subscription.IsActive == false || r.Subscription == null)
+                .ToList();
+
+            RestaurantIndexViewModel viewModel = new RestaurantIndexViewModel();
+            viewModel.ActiveRestaurants = activeRestaurants;
+            viewModel.InactiveRestaurants = inactiveRestaurants;
+
+            return View(viewModel);
         }
 
         // GET: Restaurant/Details/5
@@ -97,6 +114,7 @@ namespace WaiterRestaurantApplication.Controllers
             if (ModelState.IsValid)
             {
                 Address address = GetAddress(streetOne, city, StateId, ZipCode_Number, lat, lng);
+                //TO DO: IF DUPLICATE ADDRESS, SHOW ERROR
                 restaurant.RestaurantName = RestaurantName;
                 restaurant.AddressId = address.AddressId;
                 restaurant.UserId = User.Identity.GetUserId();
@@ -411,6 +429,46 @@ namespace WaiterRestaurantApplication.Controllers
             restaurant.ConfirmedEmployees.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index", "Restaurant");
+        }
+
+        public ActionResult SetWaitMinutes(int currentWaitMinutes, int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantEmployee"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            restaurant.CurrentWaitMinutes = currentWaitMinutes;
+            db.SaveChanges();
+            TempData["tableVisitMessage"] = "Wait time updated to " + currentWaitMinutes + " minutes.";
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId } );
+        }
+
+        public ActionResult ActivateRestaurant(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.PendingEmployees)
+                .Include(r => r.ConfirmedEmployees)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
+            return View(restaurant);
         }
 
     }
