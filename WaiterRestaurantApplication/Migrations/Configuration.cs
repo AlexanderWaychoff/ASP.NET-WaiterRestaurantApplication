@@ -132,6 +132,77 @@ namespace WaiterRestaurantApplication.Migrations
                 context.Restaurants.AddOrUpdate(restaurants.ToArray());
             }
 
+            fileExists = File.Exists(filePath + "weatherConditions.csv");
+            if (fileExists)
+            {
+                List<WeatherCondition> weatherConditions = new List<WeatherCondition>();
+                using (TextFieldParser parser = new TextFieldParser(filePath + "weatherConditions.csv"))
+                {
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.SetDelimiters(",");
+                    WeatherCondition weatherCondition;
+                    while (!parser.EndOfData)
+                    {
+                        string[] fields = parser.ReadFields();
+                        if (fields.Any(x => x.Length == 0))
+                        {
+                            Console.WriteLine("We found an empty value in your CSV. Please check your file and try again.\nPress any key to return to main menu.");
+                            Console.ReadKey(true);
+                        }
+                        weatherCondition = new WeatherCondition();
+                        weatherCondition.WeatherConditionId = Convert.ToInt32(fields[0]);
+                        weatherCondition.Temperature = Convert.ToInt32(fields[1]);
+                        weatherCondition.WeatherDescription = fields[2];
+                        weatherConditions.Add(weatherCondition);
+                    }
+                }
+                context.WeatherConditions.AddOrUpdate(weatherConditions.ToArray());
+            }
+
+            fileExists = File.Exists(filePath + "tableVisits.csv");
+            if (fileExists)
+            {
+                List<TableVisit> tableVisits = new List<TableVisit>();
+                using (TextFieldParser parser = new TextFieldParser(filePath + "tableVisits.csv"))
+                {
+                    int whileCount = 0;
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.SetDelimiters(",");
+                    TableVisit tableVisit;
+                    while (!parser.EndOfData)
+                    {
+                        whileCount += 1;
+                        string[] fields = parser.ReadFields();
+                        if (fields.Any(x => x.Length == 0))
+                        {
+                            Console.WriteLine("We found an empty value in your CSV. Please check your file and try again.\nPress any key to return to main menu.");
+                            Console.ReadKey(true);
+                        }
+                        tableVisit = new TableVisit();
+                        tableVisit.TableVisitId = Convert.ToInt32(fields[0]);
+                        tableVisit.WaitMinutes = Convert.ToInt32(fields[1]);
+                        tableVisit.WeatherConditionId = Convert.ToInt32(fields[2]);
+                        if (Convert.ToInt32(fields[3]) == 1)
+                        {
+                            tableVisit.IsSatisfied = true;
+                        }
+                        else
+                        {
+                            tableVisit.IsSatisfied = false;
+                        }
+                        tableVisit.PartySize = Convert.ToInt32(fields[4]);
+                        tableVisit.RestaurantId = Convert.ToInt32(fields[5]);
+
+                        tableVisit.IsWarned = true;
+                        tableVisit.IsActive = false;
+                        tableVisit.CreatedOn = new DateTime(2017, 12, whileCount);
+
+                        tableVisits.Add(tableVisit);
+                    }
+                }
+                context.TableVisits.AddOrUpdate(tableVisits.ToArray());
+            }
+
             //Seed the subscription types
             SubscriptionType monthlySubscription = new SubscriptionType();
             monthlySubscription.Name = "Monthly Subscription";
