@@ -15,7 +15,7 @@ namespace WaiterRestaurantApplication.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TableVisit
-        public ActionResult Index(int restaurantId)
+        public ActionResult Index(int? restaurantId)
         {
             if (restaurantId == null)
             {

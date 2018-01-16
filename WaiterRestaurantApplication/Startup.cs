@@ -14,6 +14,7 @@ namespace WaiterRestaurantApplication
         {
             ConfigureAuth(app);
             createRolesandUsers();
+            //NOTE: MOVE THIS TO SOMETHING LIKE A appsettings.json FILE that is in .gitignore! SHOULD NOT PUT THIS ON GITHUB!
             StripeConfiguration.SetApiKey("sk_test_A1hCCloeZ40NRJNUNakK39Cs");
         }
 

@@ -30,90 +30,48 @@
 }
 
 @*Active Restaurants*@
-@if( Model.ActiveRestaurants != null )
+@if (Model.ActiveRestaurants != null)
 {
     if (Model.ActiveRestaurants.Count() > 0)
     {
-        <table class="table table-striped table-bordered table-condensed">
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Open Time
-                </th>
-                <th>
-                    Close Time
-                </th>
-                <th>
-                    Active?
-                </th>
-                <th>
-                    #Diners Before Warning
-                </th>
-                <th>
-                    Grace Period (mins)
-                </th>
-                <th>
-                    Confirmed Employees
-                </th>
-                <th>
-                    Pending Employees
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
 
-            @foreach (Restaurant restaurant in Model.ActiveRestaurants)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.RestaurantName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.OpenTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.CloseTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.IsOpen)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.PeopleBeforeWarning)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => restaurant.GracePeriodMinutes)
-                    </td>
-                    <td>
-                        @if (restaurant.ConfirmedEmployees.Count > 0)
+        //new Restaurant layout
+        foreach (Restaurant restaurant in Model.ActiveRestaurants)
+        {
+            <div class="well">
+                <h3 style="margin-top: 0"><strong>@restaurant.RestaurantName</strong></h3>
+                <p><strong>Open Time: </strong>@restaurant.OpenTime | <strong>Close Time: </strong>@restaurant.CloseTime | <strong>Open-For-Business: </strong>@restaurant.IsOpen | <strong>Diners Before Warning: </strong>@restaurant.PeopleBeforeWarning | <strong>Grace Period(mins): </strong>@restaurant.GracePeriodMinutes</p>
+                <p>
+                    <strong>Confirmed Employees: </strong>
+                    @if (restaurant.ConfirmedEmployees.Count > 0)
                         {
-                            @Html.ActionLink("Manage " + restaurant.ConfirmedEmployees.Count + " Employees", "ManageEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-warning btn-block btn-xs" })
-                        }
-                        else
+                        @Html.ActionLink("Manage " + restaurant.ConfirmedEmployees.Count + " Employees", "ManageEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-warning btn-xs" })
+                    }
+                    else
+                    {
+                        <span class="text-danger">No confirmed employees</span>
+                    }
+                    | <strong>Pending Employees: </strong>
+                    @if (restaurant.PendingEmployees.Count > 0)
                         {
-                            <p class="text-danger"><small>No confirmed employees</small></p>
-                        }
-                    </td>
-                    <td>
-                        @if (restaurant.PendingEmployees.Count > 0)
-                        {
-                            @Html.ActionLink("Confirm " + restaurant.PendingEmployees.Count + " Employees", "ConfirmEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-success btn-block btn-xs" })
-                        }
-                        else
-                        {
-                            <p class="text-success"><small>None to confirm</small></p>
-                        }
-                    </td>
-                    <td>
-                        @Html.ActionLink("subscription", "Index", "Subscription", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-info btn-xs" })
-                        @Html.ActionLink("edit", "Edit", new { id = restaurant.RestaurantId }, new { @class = "btn btn-warning btn-xs" })
-                        @Html.ActionLink("delete", "Delete", new { id = restaurant.RestaurantId }, new { @class = "btn btn-danger btn-xs" })
-                    </td>
-                </tr>
-            }
-        </table>
+                        @Html.ActionLink("Confirm " + restaurant.PendingEmployees.Count + " Employees", "ConfirmEmployees", new { restaurantId = restaurant.RestaurantId }, new { @class = "btn btn-success btn-xs" })
+                    }
+                    else
+                    {
+                    <span class="text-success">None to confirm</span>
+                    }
+                </p>
+                @if (restaurant.CloseTime == null || restaurant.OpenTime == null || restaurant.IsOpen == false)
+                {
+                    <div class="alert alert-danger">@restaurant.RestaurantName is currently not showing up in search results. Please be sure to set your open time, close time and open-for-business in your settings.</div>
+                }
+                <p>
+                    <a href="@Url.Action("Edit", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-success"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a>
+                    <a href="@Url.Action("Index", "Subscription", new { restaurantId = restaurant.RestaurantId })" class="btn btn-info"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> My Subscription</a>
+                    <a href="@Url.Action("Delete", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete Restaurant</a>
+                </p>
+            </div>
+        }
     }
     else
     {

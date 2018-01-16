@@ -98,7 +98,7 @@ namespace WaiterRestaurantApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Create([Bind(Include = "RestaurantId,RestaurantName,AddressId,OpenTime,CloseTime,IsOpen,PeopleBeforeWarning,GracePeriodMinutes,CurrentWaitMinutes")] Restaurant restaurant)
-        public ActionResult Create(string RestaurantName, string streetOne, string streetTwo, string city, string StateId, string ZipCode_Number, string lat, string lng)
+        public ActionResult Create(string RestaurantName, string streetOne, string streetTwo, string city, string StateId, string zipCode, string lat, string lng)
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -109,15 +109,18 @@ namespace WaiterRestaurantApplication.Controllers
                 return HttpNotFound();
             }
 
-
             Restaurant restaurant = new Restaurant();
             if (ModelState.IsValid)
             {
-                Address address = GetAddress(streetOne, city, StateId, ZipCode_Number, lat, lng);
-                //TO DO: IF DUPLICATE ADDRESS, SHOW ERROR
+                Address address = GetAddress(streetOne, city, StateId, zipCode, lat, lng);
+                if (address.AddressId == 0)
+                {
+                    return RedirectToAction("DuplicateAddress", "Restaurant");
+                }
                 restaurant.RestaurantName = RestaurantName;
                 restaurant.AddressId = address.AddressId;
                 restaurant.UserId = User.Identity.GetUserId();
+                restaurant.IsOpen = true;
                 db.Restaurants.Add(restaurant);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Restaurant");
@@ -125,6 +128,11 @@ namespace WaiterRestaurantApplication.Controllers
 
             ViewBag.StateId = new SelectList(db.States, "StateId", "Abbreviation");
             return View(restaurant);
+        }
+
+        public ActionResult DuplicateAddress()
+        {
+            return View();
         }
 
         private Address GetAddress(string StreetOne, string City_Name, string StateId, string ZipCode_Number, string lat, string lng)
@@ -185,18 +193,26 @@ namespace WaiterRestaurantApplication.Controllers
         }
 
         // GET: Restaurant/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? restaurantId)
         {
-            if (id == null)
+            if (restaurantId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Restaurant restaurant = db.Restaurants.Find(id);
+
+            var restaurant = db.Restaurants
+                .Include(r => r.Address)
+                .Include(r => r.Address.City)
+                .Include(r => r.Address.State)
+                .Include(r => r.Address.ZipCode)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
             if (restaurant == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.AddressId = new SelectList(db.Addresses, "AddressId", "StreetOne", restaurant.AddressId);
+            ViewBag.StateId = new SelectList(db.States, "StateId", "Abbreviation");
             return View(restaurant);
         }
 
@@ -205,15 +221,49 @@ namespace WaiterRestaurantApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RestaurantId,RestaurantName,AddressId,OpenTime,CloseTime,IsOpen,PeopleBeforeWarning,GracePeriodMinutes,CurrentWaitMinutes")] Restaurant restaurant)
+        //public ActionResult Edit([Bind(Include = "RestaurantId,RestaurantName,AddressId,OpenTime,CloseTime,IsOpen,PeopleBeforeWarning,GracePeriodMinutes,CurrentWaitMinutes")] Restaurant restaurant)
+        public ActionResult Edit(int restaurantId, string RestaurantName, string streetOne, string streetTwo, string city, string StateId, string zipCode, string lat, string lng, string openTime, string closeTime, bool IsOpen, int PeopleBeforeWarning, int GracePeriodMinutes)
         {
+            //NOTE: FOR DEMO PURPOSES, THE EDIT ACTION WILL NOT SEARCH FOR A NEW LAT AN LNG IF THE ADDRESS CHANGES!
+            //WHEN DEMONSTRATING THE APP, DO NOT CHANGE THE ADDRESS!
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
             if (ModelState.IsValid)
             {
-                db.Entry(restaurant).State = EntityState.Modified;
+                //Again, not doing the address stuff for the Edit action:
+                //Address address = GetAddress(streetOne, city, StateId, zipCode, lat, lng);
+                //if (address.AddressId == 0)
+                //{
+                //    return RedirectToAction("DuplicateAddress", "Restaurant");
+                //}
+
+                restaurant.RestaurantName = RestaurantName;
+
+                //restaurant.AddressId = address.AddressId;
+                //restaurant.UserId = User.Identity.GetUserId();
+
+                restaurant.OpenTime = openTime;
+                restaurant.CloseTime = closeTime;
+                restaurant.IsOpen = IsOpen;
+                restaurant.PeopleBeforeWarning = PeopleBeforeWarning;
+                restaurant.GracePeriodMinutes = GracePeriodMinutes;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Restaurant");
             }
-            ViewBag.AddressId = new SelectList(db.Addresses, "AddressId", "StreetOne", restaurant.AddressId);
+
+            ViewBag.StateId = new SelectList(db.States, "StateId", "Abbreviation");
             return View(restaurant);
         }
 
