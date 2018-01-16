@@ -3,9 +3,11 @@
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">Welcome Diners.  Use the button below to find restaurants nearby.</p>
-    <p><a @Html.ActionLink("Restaurants near me", "SearchRestaurantOptions", "Diner", null, new { @class = "btn btn-success btn-xs" })</a></p>
+    <h1>Welcome to Waiter.</h1>
+    <p class="lead">Add yourself to the list and avoid the wait!</p>
+    <p>
+        <a href="@Url.Action("Index", "Search")" class="btn btn-success"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search Restaurants</a>
+    </p>
 </div>
 
 <div class="row">

@@ -1,0 +1,52 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model IEnumerable<WaiterRestaurantApplication.Models.Restaurant>
+@{
+    ViewBag.Title = "Search Restaurants";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @*<div id="map" style="width: 100%; height: 400px; margin-bottom: 20px; display: none;"></div>*@
+    <div id="map" style="width: 100%; height: 400px; margin-bottom: 20px;"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <p><button id="locationButton" class="btn btn-primary btn-block">Search Restaurants Near My Location</button></p>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" style="text-align: center;">
+        <form class="form-inline justify-content-center">
+            <div class="form-group">
+                <input type="text" class="form-control" id="streetAddress" placeholder="Street Address">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="city" placeholder="City">
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.DropDownList("StateId", null, htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+            <button class="btn btn-primary" id="search">Search By Address</button>
+        </form>
+    </div>
+</div>
+<div id="validationErrors"></div>
+@*YOU ARE HERE!!!!!!!!!!!!!!!!
+    DISPLAY ALL OF THE RESTAURANTS ON THE MAP!!!!!!!!!!!!!!!!*@
+
+@foreach (var restaurant in Model)
+{
+    <p>@restaurant.RestaurantName</p>
+}
+
+
+
+@section scripts{
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3F02Dr7BSQRR48YgU8akdwdR-9FsXp3w"></script>
+<script src="@Url.Content("~/Scripts/searchRestaurants.js")"></script>
+}
