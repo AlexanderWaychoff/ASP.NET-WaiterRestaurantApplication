@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Duplicate Address";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Duplicate Address</h2>
+<div class="alert alert-danger" role="alert">The address you entered is already in use. If you believe this is an error, please @Html.ActionLink("contact us", "Contact", "Home", routeValues: null, htmlAttributes: new { title = "Contact Us", @class = "alert-link" }).</div>
+<p>
+    @Html.ActionLink("Return to Restaurants", "Index", "Restaurant", routeValues: null, htmlAttributes: new { title = "Return to Restaurants", @class = "btn btn-primary" })
+</p>
+

@@ -12,6 +12,8 @@ namespace WaiterRestaurantApplication.Controllers
     public class StripeController : Controller
     {
 
+        //NOTE: THIS SHOULD BE MOVED INTO A PLAIN OLD CLASS, NOT A CONTROLLER!
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Stripe

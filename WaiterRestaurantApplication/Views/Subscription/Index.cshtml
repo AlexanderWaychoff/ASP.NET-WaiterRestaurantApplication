@@ -15,6 +15,13 @@
     <p><strong>Subscription Price:</strong> @String.Format("{0:C2}", Model.Subscription.SubscriptionType.Price)</p>
     <p><strong>Start Date:</strong> @String.Format("{0:MM/dd/yyyy}", Model.Subscription.StartDate)</p>
     <p><strong>End Date:</strong> @String.Format("{0:MM/dd/yyyy}", Model.Subscription.EndDate)</p>
+    @:
+        string autoRenewalStatus = "On";
+        if (Model.Subscription.AutoRenewal == false)
+        {
+            autoRenewalStatus = "Off";
+        }
+        <p><strong>Auto Renewal:</strong> @autoRenewalStatus</p>
     <p>
         @Html.ActionLink("Cancel Subscription", "Cancel", "Subscription", new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-danger" })
         @Html.ActionLink("Return to My Restaurants", "Index", "Restaurant", null, new { @class = "btn btn-primary" })
