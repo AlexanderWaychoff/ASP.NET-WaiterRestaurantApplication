@@ -1,0 +1,23 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
+@{
+    ViewBag.Title = "Subscriptions for " + Model.RestaurantName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Waiter Subscription for @Model.RestaurantName</h2>
+
+@if (Model.Subscription != null)
+{
+    <h4>Subscription Details</h4>
+    <p><strong>Restaurant Name:</strong> @Model.RestaurantName</p>
+    <p><strong>Subscription Type:</strong> @Model.Subscription.SubscriptionType.Name</p>
+    <p><strong>Subscription Price:</strong> @String.Format("{0:C2}", Model.Subscription.SubscriptionType.Price)</p>
+    <p><strong>Start Date:</strong> @String.Format("{0:MM/dd/yyyy}", Model.Subscription.StartDate)</p>
+    <p><strong>End Date:</strong> @String.Format("{0:MM/dd/yyyy}", Model.Subscription.EndDate)</p>
+    <p>
+        @Html.ActionLink("Cancel Subscription", "Cancel", "Subscription", new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-danger" })
+        @Html.ActionLink("Return to My Restaurants", "Index", "Restaurant", null, new { @class = "btn btn-primary" })
+    </p>
+}
+

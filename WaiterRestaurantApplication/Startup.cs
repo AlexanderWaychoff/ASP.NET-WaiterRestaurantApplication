@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
+using Stripe;
 using WaiterRestaurantApplication.Models;
 
 [assembly: OwinStartupAttribute(typeof(WaiterRestaurantApplication.Startup))]
@@ -13,6 +14,7 @@ namespace WaiterRestaurantApplication
         {
             ConfigureAuth(app);
             createRolesandUsers();
+            StripeConfiguration.SetApiKey("sk_test_A1hCCloeZ40NRJNUNakK39Cs");
         }
 
         private void createRolesandUsers()

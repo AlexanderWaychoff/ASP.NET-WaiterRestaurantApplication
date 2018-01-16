@@ -7,7 +7,7 @@ namespace WaiterRestaurantApplication.Models
 {
     public class SubscriptionType
     {
-        public int SubscriptionTypesId { get; set; }
+        public int SubscriptionTypeId { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
     }
