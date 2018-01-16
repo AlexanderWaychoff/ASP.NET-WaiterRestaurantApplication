@@ -37,8 +37,8 @@
                 <td>@tableVisit.PartySize</td>
                 <td>@String.Format("{0:(###) ###-####}", Convert.ToInt64(tableVisit.DinerPhone))</td>
                 <td>
-                    @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisit = tableVisit }, new { @class = "btn btn-success btn-xs" })
-                    @Html.ActionLink("Remove from Wait List", "RemoveFromLine", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-danger btn-xs" })
+                    @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-success btn-xs" })
+                    @Html.ActionLink("Remove from Wait List", "HostRemoveFromLine", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-danger btn-xs" })
                 </td>
             </tr>    
         }
