@@ -22,5 +22,9 @@ namespace WaiterRestaurantApplication.Models
             Temperature = WeatherJSONReader.ConvertToFahrenheit(temp);
             WeatherDescription = (string)jWeather[0]["description"];
         }
+        public WeatherCondition()
+        {
+
+        }
     }
 }
