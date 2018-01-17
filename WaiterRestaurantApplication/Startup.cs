@@ -74,6 +74,20 @@ namespace WaiterRestaurantApplication
                     var result1 = UserManager.AddToRole(user.Id, "RestaurantManager");
 
                 }
+                user = new ApplicationUser();
+                user.UserName = "GoudaMan";
+                user.Email = "Cheese@italian.com";
+
+                userPWD = "Password123!";
+
+                chkUser = UserManager.Create(user, userPWD);
+
+                //Add default User to Role Admin   
+                if (chkUser.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "RestaurantManager");
+
+                }
 
             }
 
