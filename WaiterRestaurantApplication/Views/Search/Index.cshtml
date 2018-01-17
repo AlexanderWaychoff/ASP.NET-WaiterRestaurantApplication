@@ -57,7 +57,18 @@
     {
         waitRatePercentage = restaurant.WaitRate.WaitRatePercentage.ToString() + "%";
     }
-    <span class="marker" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-waitrate="@waitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
+
+    string estimatedWaitTime;
+    if (restaurant.EstimatedWaitTime == -1)
+    {
+        estimatedWaitTime = "Not Enough Data";
+    }
+    else
+    {
+        estimatedWaitTime = restaurant.EstimatedWaitTime + " minutes";
+    }
+
+    <span class="marker" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-estimatedwaittime="@estimatedWaitTime" data-waitrate="@waitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
 }
 
 
