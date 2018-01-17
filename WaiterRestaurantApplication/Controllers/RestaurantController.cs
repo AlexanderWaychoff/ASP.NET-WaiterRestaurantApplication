@@ -521,5 +521,14 @@ namespace WaiterRestaurantApplication.Controllers
             return View(restaurant);
         }
 
+        public ActionResult DinerConfirmation(int restaurantId)
+        {
+            var restaurant = db.Restaurants
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+            return View(restaurant);
+        }
+
+
     }
 }

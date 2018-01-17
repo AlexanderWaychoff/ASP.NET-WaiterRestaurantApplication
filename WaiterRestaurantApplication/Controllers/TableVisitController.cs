@@ -59,23 +59,18 @@ namespace WaiterRestaurantApplication.Controllers
         }
 
         // GET: TableVisit/Create
-        public ActionResult Create(int restaurantId)
+        public ActionResult Create(int restaurantId, bool isHostEntry)
         {
-
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (!User.IsInRole("RestaurantEmployee"))
-            {
-                return HttpNotFound();
-            }
-
             var restaurant = db.Restaurants
                 .Include(r => r.TableVisits)
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
-            return View(restaurant);
+
+            TableVisitCreateModel viewModel = new TableVisitCreateModel();
+            viewModel.Restaurant = restaurant;
+            viewModel.IsHostEntry = isHostEntry;
+
+            return View(viewModel);
         }
 
         // POST: TableVisit/Create
@@ -98,14 +93,8 @@ namespace WaiterRestaurantApplication.Controllers
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
 
-            //Alex...add your magic below...
             string cityName = restaurant.Address.City.Name;
-            //need to get weather condition first - It cannot be nullable
-            //dummy weather condition:
             WeatherCondition weatherCondition = new WeatherCondition(cityName);
-            //weatherCondition.Temperature = 75;
-            //weatherCondition.WeatherDescription = "Partly Cloudy";
-
 
             TableVisit tableVisit = new TableVisit();
             tableVisit.DinerName = dinerName;
@@ -123,8 +112,12 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
-            TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
-            return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId});
+            if(isHostEntry)
+            {
+                TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
+                return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId });
+            }
+            return RedirectToAction("DinerConfirmation", "Restaurant", new { restaurantId = restaurantId });
         }
 
         // GET: TableVisit/Edit/5

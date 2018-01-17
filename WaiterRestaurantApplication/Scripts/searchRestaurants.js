@@ -130,6 +130,7 @@
         markerObject.lng = parseFloat(mapData.lng);
         markerObject.restaurantName = mapData.name;
         markerObject.waitTime = mapData.waittime;
+        markerObject.restaurantId = mapData.restaurantid;
         markers.push(markerObject);
     });
     addMarkers(markers);
@@ -139,7 +140,13 @@
         for (let i = 0; i < markers.length; i++)
         {
             let infowindow = new google.maps.InfoWindow({
-                content: '<h4>' + markers[i].restaurantName + '</h4><p><strong>Wait Time:</strong> ' + markers[i].waitTime + ' minutes</p><p><a href="#">Get On The List!</a></p>'
+                content:
+                    '<h4>' + markers[i].restaurantName + '</h4>' +
+                    '<p><strong>Stated Wait Time:</strong> ' + markers[i].waitTime + ' minutes</p>' +
+                    '<p><strong>Average Wait Time:</strong> ' + '45' + ' minutes</p>' +
+                    '<p><strong>Wait Rate:</strong> ' + '45' + '%</p>' +
+                    '<p><a href="/TableVisit/Create?restaurantId=' + markers[i].restaurantId + '&isHostEntry=false" class="btn btn-primary">Get On The List!</a></p>'
+
             });
             let restaurantMarker = new google.maps.Marker({
                 position: { lat: markers[i].lat, lng: markers[i].lng },

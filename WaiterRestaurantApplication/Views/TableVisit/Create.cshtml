@@ -1,11 +1,12 @@
-﻿@model WaiterRestaurantApplication.Models.Restaurant
+﻿@model WaiterRestaurantApplication.Models.TableVisitCreateModel
 
 @{
-    ViewBag.Title = "Add Diner to Wait List";
+    ViewBag.Title = "Get on the Wait List at " + Model.Restaurant.RestaurantName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Add Diner to Wait List</h2>
+<h2>Get on the Wait List at @Model.Restaurant.RestaurantName</h2>
+<p><strong>Current Stated Wait Time: @Model.Restaurant.CurrentWaitMinutes minutes</strong></p>
 
 @using (Html.BeginForm()) 
 {
@@ -14,8 +15,10 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <input type="hidden" name="restaurantId" value="@Model.RestaurantId">
-        <input type="hidden" name="isHostEntry" value="true">
+        @*DO NOT NEED THESE HIDDEN INPUTS BECAUSE THE PARAMETERS ARE COMING INTO THE GET VERSION OF THE ACTION*@
+        @*<input type="hidden" name="restaurantId" value="@Model.Restaurant.RestaurantId">
+        <input type="hidden" name="isHostEntry" value=@Model.IsHostEntry>*@
+
         <div class="form-group">
             <label class="control-label col-md-2" for="dinerName">Diner Name</label>
             <div class="col-md-10">

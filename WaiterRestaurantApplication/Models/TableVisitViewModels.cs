@@ -10,4 +10,10 @@ namespace WaiterRestaurantApplication.Models
         public List<TableVisit> TableVisits { get; set; }
         public Restaurant Restaurant { get; set; }
     }
+
+    public class TableVisitCreateModel
+    {
+        public Restaurant Restaurant { get; set; }
+        public bool IsHostEntry { get; set; }
+    }
 }
