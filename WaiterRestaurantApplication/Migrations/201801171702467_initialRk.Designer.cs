@@ -7,13 +7,13 @@ namespace WaiterRestaurantApplication.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class init : IMigrationMetadata
+    public sealed partial class initialRk : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initialRk));
         
         string IMigrationMetadata.Id
         {
-            get { return "201801171619429_init"; }
+            get { return "201801171702467_initialRk"; }
         }
         
         string IMigrationMetadata.Source

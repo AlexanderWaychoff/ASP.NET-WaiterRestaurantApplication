@@ -3,7 +3,7 @@ namespace WaiterRestaurantApplication.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class initialRk : DbMigration
     {
         public override void Up()
         {
@@ -70,7 +70,6 @@ namespace WaiterRestaurantApplication.Migrations
                         GracePeriodMinutes = c.Int(nullable: false),
                         CurrentWaitMinutes = c.Int(nullable: false),
                         UserId = c.String(maxLength: 128),
-                        WaitRateId = c.Int(nullable: false),
                         ApplicationUser_Id = c.String(maxLength: 128),
                         Subscription_SubscriptionId = c.Int(),
                     })
@@ -79,10 +78,8 @@ namespace WaiterRestaurantApplication.Migrations
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
                 .ForeignKey("dbo.Subscriptions", t => t.Subscription_SubscriptionId)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .ForeignKey("dbo.WaitRates", t => t.WaitRateId, cascadeDelete: true)
                 .Index(t => t.AddressId)
                 .Index(t => t.UserId)
-                .Index(t => t.WaitRateId)
                 .Index(t => t.ApplicationUser_Id)
                 .Index(t => t.Subscription_SubscriptionId);
             
@@ -225,15 +222,6 @@ namespace WaiterRestaurantApplication.Migrations
                 .Index(t => t.Restaurant_RestaurantId);
             
             CreateTable(
-                "dbo.WaitRates",
-                c => new
-                    {
-                        WaitRateId = c.Int(nullable: false, identity: true),
-                        WateRatePercentage = c.Int(),
-                    })
-                .PrimaryKey(t => t.WaitRateId);
-            
-            CreateTable(
                 "dbo.AspNetRoles",
                 c => new
                     {
@@ -243,12 +231,20 @@ namespace WaiterRestaurantApplication.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
+            CreateTable(
+                "dbo.WaitRates",
+                c => new
+                    {
+                        WaitRateId = c.Int(nullable: false, identity: true),
+                        WateRatePercentage = c.Int(),
+                    })
+                .PrimaryKey(t => t.WaitRateId);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Restaurants", "WaitRateId", "dbo.WaitRates");
             DropForeignKey("dbo.Restaurants", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Transactions", "Restaurant_RestaurantId", "dbo.Restaurants");
             DropForeignKey("dbo.TableVisits", "RestaurantId", "dbo.Restaurants");
@@ -279,14 +275,13 @@ namespace WaiterRestaurantApplication.Migrations
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Restaurants", new[] { "Subscription_SubscriptionId" });
             DropIndex("dbo.Restaurants", new[] { "ApplicationUser_Id" });
-            DropIndex("dbo.Restaurants", new[] { "WaitRateId" });
             DropIndex("dbo.Restaurants", new[] { "UserId" });
             DropIndex("dbo.Restaurants", new[] { "AddressId" });
             DropIndex("dbo.Addresses", new[] { "ZipCodeId" });
             DropIndex("dbo.Addresses", new[] { "StateId" });
             DropIndex("dbo.Addresses", new[] { "CityId" });
-            DropTable("dbo.AspNetRoles");
             DropTable("dbo.WaitRates");
+            DropTable("dbo.AspNetRoles");
             DropTable("dbo.Transactions");
             DropTable("dbo.WeatherConditions");
             DropTable("dbo.TableVisits");

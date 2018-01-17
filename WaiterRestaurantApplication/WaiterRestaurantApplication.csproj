@@ -255,6 +255,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessengerController.cs" />
     <Compile Include="Controllers\RestaurantController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\TableVisitController.cs" />
@@ -262,9 +263,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoogleMapAPI.cs" />
-    <Compile Include="Migrations\201801171619429_init.cs" />
-    <Compile Include="Migrations\201801171619429_init.Designer.cs">
-      <DependentUpon>201801171619429_init.cs</DependentUpon>
+    <Compile Include="Migrations\201801171702467_initialRk.cs" />
+    <Compile Include="Migrations\201801171702467_initialRk.Designer.cs">
+      <DependentUpon>201801171702467_initialRk.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -294,6 +295,10 @@
     <Content Include="Content\bootstrap-timepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\waiter_logo-1200x668.png" />
+    <Content Include="Content\Images\waiter_logo-2500x1392.png" />
+    <Content Include="Content\Images\waiter_logo-600x334.png" />
+    <Content Include="Content\Images\waiter_logo-800x445.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -319,6 +324,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\searchRestaurants.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -393,8 +399,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801171619429_init.resx">
-      <DependentUpon>201801171619429_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801171702467_initialRk.resx">
+      <DependentUpon>201801171702467_initialRk.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
