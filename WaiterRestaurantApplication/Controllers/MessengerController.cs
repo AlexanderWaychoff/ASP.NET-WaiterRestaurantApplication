@@ -57,19 +57,20 @@ namespace WaiterRestaurantApplication.Controllers
 
             TableVisit currentTableVisit = db.TableVisits
                 .Where(r => r.DinerPhone == From)
+                .OrderByDescending(r => r.TableVisitId)
                 .FirstOrDefault();
 
             if(Body == "y")
             {
                 currentTableVisit.IsSatisfied = true;
-                analytics.CalculateWaitRate(currentTableVisit);
                 db.SaveChanges();
+                analytics.CalculateWaitRate(currentTableVisit);
             }
             if(Body == "n")
             {
                 currentTableVisit.IsSatisfied = false;
-                analytics.CalculateWaitRate(currentTableVisit);
                 db.SaveChanges();
+                analytics.CalculateWaitRate(currentTableVisit);
             }
 
             return TwiML(responseMessage);

@@ -37,9 +37,10 @@ namespace WaiterRestaurantApplication.Controllers
                 }
             }
 
-            int WaitRate = Convert.ToInt32((yesTotal / totalRatings)*100);
+            int WaitRate = (yesTotal / totalRatings)*100;
 
-            currentRestaurant.WaitRate.WaitRatePercentage = WaitRate;
+            WaitRate rate = db.WaitRate.Find(currentRestaurant.WaitRateId);
+            rate.WaitRatePercentage = WaitRate;
         }
 
         public int CalculateEstimatedWaitTimes(int restaurantId)
