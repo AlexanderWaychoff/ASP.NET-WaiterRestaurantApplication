@@ -529,7 +529,7 @@ namespace WaiterRestaurantApplication.Controllers
             return View(restaurant);
         }
 
-        public ActionResult DisplayAnalytics(int restaurantId)
+ /*       public ActionResult DisplayAnalytics(int restaurantId)
         {
             var restaurant = db.Restaurants
                 .Where(r => r.RestaurantId == restaurantId)
@@ -568,6 +568,6 @@ namespace WaiterRestaurantApplication.Controllers
             return View(viewModel);
         }
 
-
+*/
     }
 }
