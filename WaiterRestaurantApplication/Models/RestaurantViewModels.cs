@@ -15,5 +15,6 @@ namespace WaiterRestaurantApplication.Models
     {
         public Restaurant Restaurant { get; set; }
         public ICollection<TableVisit> TableVisits { get; set; }
+        public ICollection<TableVisitColumn> TableVisitColumns { get; set; }
     }
 }
