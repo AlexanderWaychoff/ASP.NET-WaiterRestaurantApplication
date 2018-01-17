@@ -23,10 +23,13 @@ namespace WaiterRestaurantApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            ManageTableVisitTime();
+            db.SaveChanges();
+
             var restaurant = db.Restaurants
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
-            
+
             var tableVisits = db.TableVisits
                 .Where(t => t.RestaurantId == restaurantId)
                 .Where(t => t.IsActive == true)
@@ -41,6 +44,7 @@ namespace WaiterRestaurantApplication.Controllers
             {
                 ViewBag.infoMessage = TempData["tableVisitMessage"].ToString();
             }
+
             return View(viewModel);
         }
 
@@ -113,7 +117,7 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
-            if(isHostEntry)
+            if (isHostEntry)
             {
                 TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
                 return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId });
@@ -187,6 +191,7 @@ namespace WaiterRestaurantApplication.Controllers
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table is ready!");
             currentTableVisit.GracePeriodStart = DateTime.Now;
             ViewBag.infoMessage = "Your Table Notification has been sent.";
+            db.SaveChanges();
             return RedirectToAction("Index", "TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
 
         }
@@ -194,7 +199,7 @@ namespace WaiterRestaurantApplication.Controllers
         private void WarnDiner(int TableVisitId)
         {
             TableVisit currentTableVisit = db.TableVisits.Find(TableVisitId);
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table will be ready Soon!" );
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table will be ready Soon!");
             currentTableVisit.IsWarned = true;
 
             //return RedirectToAction("Index","TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
@@ -205,7 +210,7 @@ namespace WaiterRestaurantApplication.Controllers
 
             DateTime gracePeriod = currentTableVisit.GracePeriodStart.Value;
 
-            return (int) (gracePeriod.Subtract(currentTableVisit.CreatedOn).TotalMinutes);
+            return (int)(gracePeriod.Subtract(currentTableVisit.CreatedOn).TotalMinutes);
         }
 
         public ActionResult HostRemoveFromLine(int tableVisitId)
@@ -213,9 +218,12 @@ namespace WaiterRestaurantApplication.Controllers
             TableVisit currentTableVisit = db.TableVisits.Find(tableVisitId);
             int currentRestaurantId = currentTableVisit.RestaurantId;
             Restaurant currentResaurant = db.Restaurants.Find(currentRestaurantId);
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter."+currentResaurant.RestaurantName+" had a table ready for you X minutes earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)") ;
-            ViewBag.infoMessage = "You have Removed " + currentTableVisit.DinerName + "'s reservation.";
-            currentTableVisit.IsActive = false;
+            if (currentTableVisit.IsActive)
+            {
+                messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter." + currentResaurant.RestaurantName + " had a table ready for you earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
+                ViewBag.infoMessage = "You have Removed " + currentTableVisit.DinerName + "'s reservation.";
+                currentTableVisit.IsActive = false;
+            }
             db.SaveChanges();
             return RedirectToAction("Index", "TableVisit", new { restaurantId = currentRestaurantId });
         }
@@ -224,10 +232,12 @@ namespace WaiterRestaurantApplication.Controllers
         {
             int currentRestaurantId = currentTableVisit.RestaurantId;
             Restaurant currentResaurant = db.Restaurants.Find(currentRestaurantId);
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter." + currentResaurant.RestaurantName + " had a table ready for you X minutes earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
-            currentTableVisit.IsActive = false;
-            db.SaveChanges();
-            ViewBag.infoMessage = currentTableVisit.DinerName + "'s reservation has been removed due to grace period reservation.";
+            if (currentTableVisit.IsActive)
+            {
+                messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter." + currentResaurant.RestaurantName + " had a table ready for you  earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
+                ViewBag.infoMessage = currentTableVisit.DinerName + "'s reservation has been removed due to grace period reservation.";
+                currentTableVisit.IsActive = false;
+            }
             return RedirectToAction("Index", "TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
         }
 
@@ -240,57 +250,57 @@ namespace WaiterRestaurantApplication.Controllers
             base.Dispose(disposing);
         }
 
-        public void ManageTableVisitTime()
+        public Task ManageTableVisitTime()
         {
-            var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(1);
+             CheckForDinersToWarn();
+             CheckForExpiredGracePeriod();
 
-            var timer = new System.Threading.Timer((e) =>
-            {
-                foreach (var resturant in db.Restaurants)
-                {
-
-                    Parallel.Invoke(
-                        () =>CheckForDinersToWarn(resturant.TableVisits, resturant),
-                        () =>CheckForExpiredGracePeriod(resturant.TableVisits, resturant)
-                    );
-                }
-            }, null, startTimeSpan, periodTimeSpan);
+            return null;
         }
 
-        private void CheckForDinersToWarn(List<TableVisit> tableVisits, Restaurant resturant)
+        private void CheckForDinersToWarn()
         {
-            int peopleInLine = 0;
-            for(int i =0; i < tableVisits.Count; i++)
-            {
-                if(!tableVisits[i].IsWarned && tableVisits[i].IsActive)
-                {
-                    peopleInLine += tableVisits[i].PartySize;
-                    if(peopleInLine >= resturant.PeopleBeforeWarning)
+            foreach (var restaurant in db.Restaurants) {
+                int peopleInLine = 0;
+                bool warnNext = false;
+                foreach (var customer in db.TableVisits) {
+                    if (!customer.IsWarned && customer.IsActive && customer.RestaurantId == restaurant.RestaurantId)
                     {
-                        WarnDiner(tableVisits[i+1].TableVisitId);
-                        break;
+                        if (warnNext)
+                        {
+                            WarnDiner(customer.TableVisitId);
+                            break;
+                        }
+                        peopleInLine += customer.PartySize;
+                        if (peopleInLine >= restaurant.PeopleBeforeWarning)
+                        {
+                            warnNext = true;
+                        }
                     }
                 }
             }
+            db.SaveChanges();
         }
 
-        private void CheckForExpiredGracePeriod(List<TableVisit> tableVisits, Restaurant resturant)
+        private void CheckForExpiredGracePeriod()
         {
-            for(int i=0;i< tableVisits.Count; i++)
+            foreach (var customer in db.TableVisits)
             {
-                if(tableVisits[i].IsActive && tableVisits[i].GracePeriodStart != null)
+                Restaurant resturant = db.Restaurants.Find(customer.RestaurantId);
+                if (customer.GracePeriodStart.HasValue && customer.IsActive)
                 {
-                    DateTime gracePeriodStart = tableVisits[i].GracePeriodStart.Value;
-                    if (gracePeriodStart.AddMinutes(resturant.GracePeriodMinutes) == DateTime.Now)
+                    DateTime gracePeriodStart = customer.GracePeriodStart.Value;
+                    if (gracePeriodStart.AddMinutes(resturant.GracePeriodMinutes) <= DateTime.Now)
                     {
-                        messenger.SendSMSMessage(tableVisits[i].DinerPhone, "Your Grace period has expired. You have lost your reservation.");
-                        tableVisits[i].IsActive = false;
-                        tableVisits[i].IsNoShow = true;
-                        RemoveFromLine(tableVisits[i]);
+                        messenger.SendSMSMessage(customer.DinerPhone, "Your Grace period has expired. You have lost your reservation.");
+                        customer.IsActive = false;
+                        customer.IsNoShow = true;
+                        RemoveFromLine(customer);
                     }
                 }
             }
+            db.SaveChanges();
         }
     }
 }
+
