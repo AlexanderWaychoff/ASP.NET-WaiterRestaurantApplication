@@ -16,6 +16,7 @@ namespace WaiterRestaurantApplication.Controllers
         {
             var restaurants = db.Restaurants
                 .Include(r => r.Address)
+                .Include(r => r.WaitRate)
                 .ToList();
 
             ViewBag.StateId = new SelectList(db.States, "StateId", "Abbreviation");
