@@ -10,4 +10,10 @@ namespace WaiterRestaurantApplication.Models
         public ICollection<Restaurant> ActiveRestaurants { get; set; }
         public ICollection<Restaurant> InactiveRestaurants { get; set; }
     }
+
+    public class RestaurantDisplayAnalyticsViewModel
+    {
+        public Restaurant Restaurant { get; set; }
+        public ICollection<TableVisit> TableVisits { get; set; }
+    }
 }

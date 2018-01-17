@@ -529,6 +529,45 @@ namespace WaiterRestaurantApplication.Controllers
             return View(restaurant);
         }
 
+        public ActionResult DisplayAnalytics(int restaurantId)
+        {
+            var restaurant = db.Restaurants
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
+            var tableVisits = db.TableVisits
+                .Where(t => t.RestaurantId == restaurantId)
+                .OrderByDescending(t=> t.CreatedOn)
+                .ToList();
+
+            RestaurantDisplayAnalyticsViewModel viewModel = new RestaurantDisplayAnalyticsViewModel();
+            viewModel.Restaurant = restaurant;
+            viewModel.TableVisits = tableVisits;
+
+            List<TableVisitColumn> tableVisitColumns = new List<TableVisitColumn>();
+            TableVisitColumn tableVisitColumn;
+            for (int i=tableVisits.Count-1; i>0; i--)
+            {
+                if ( i == tableVisits.Count-1 )
+                {
+                    tableVisitColumn = new TableVisitColumn();
+                    tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
+                    tableVisitColumn.TotalVisits++;
+                    if ( tableVisits[i].IsHostEntry )
+                    {
+                        tableVisitColumn.HostEnteredVisits++;
+                    }
+                    else
+                    {
+                        tableVisitColumn.DinerEnteredVisits++;
+                    }
+                }
+
+            }
+
+            return View(viewModel);
+        }
+
 
     }
 }

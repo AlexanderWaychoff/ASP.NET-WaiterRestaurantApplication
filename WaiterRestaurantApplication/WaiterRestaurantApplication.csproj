@@ -262,10 +262,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoogleMapAPI.cs" />
-    <Compile Include="Migrations\201801161946320_init.cs" />
-    <Compile Include="Migrations\201801161946320_init.Designer.cs">
-      <DependentUpon>201801161946320_init.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -286,6 +282,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="OpenWeatherWeather.cs" />
+    <Compile Include="TableVisitColumn.cs" />
     <Compile Include="WeatherJSONReader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +377,7 @@
     <Content Include="Views\Restaurant\DuplicateAddress.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Restaurant\DinerConfirmation.cshtml" />
+    <Content Include="Views\Restaurant\DisplayAnalytics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -392,11 +390,6 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801161946320_init.resx">
-      <DependentUpon>201801161946320_init.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

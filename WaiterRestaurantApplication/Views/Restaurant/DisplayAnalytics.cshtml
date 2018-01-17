@@ -1,0 +1,58 @@
+﻿@model WaiterRestaurantApplication.Models.RestaurantDisplayAnalyticsViewModel
+@{
+    ViewBag.Title = "Display Analytics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="chartContainer" style="height: 370px; width: 100%; margin-top: 40px;"></div>
+
+@section scripts{
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script>
+    window.onload = function () {
+
+    //Better to construct options first and then pass it as a parameter
+    var options = {
+	    animationEnabled: true,
+	    title:{
+		    text: "@Model.Restaurant.RestaurantName Table Visits"
+	    },
+	    axisY:{
+		    title:"Tables on Wait List"
+	    },
+	    toolTip: {
+		    shared: true,
+		    reversed: true
+	    },
+	    data: [{
+		    type: "stackedColumn",
+		    name: "Created By Diner",
+		    showInLegend: "true",
+		    yValueFormatString: "#,##0mn tonnes",
+		    dataPoints: [
+
+                { y: 111338, label: "USA" },
+			    { y: 49088, label: "Russia" },
+			    { y: 62200, label: "China" },
+			    { y: 90085, label: "India" },
+			    { y: 38600, label: "Australia" },
+		    ]
+	    },
+	    {
+		    type: "stackedColumn",
+		    name: "Created By Host",
+		    showInLegend: "true",
+		    yValueFormatString: "#,##0mn tonnes",
+		    dataPoints: [
+			    { y: 135305 , label: "USA" },
+			    { y: 107922, label: "Russia" },
+			    { y: 52300, label: "China" },
+			    { y: 3360, label: "India" },
+			    { y: 39900, label: "Australia" },
+		    ]
+	    }]
+    };
+
+    $("#chartContainer").CanvasJSChart(options);
+    }
+</script>}
