@@ -109,6 +109,11 @@ namespace WaiterRestaurantApplication.Controllers
                 return HttpNotFound();
             }
 
+            WaitRate waitRate = new WaitRate();
+            waitRate.WaitRatePercentage = 100;
+            db.WaitRate.Add(waitRate);
+            db.SaveChanges();
+
             Restaurant restaurant = new Restaurant();
             if (ModelState.IsValid)
             {
@@ -121,6 +126,7 @@ namespace WaiterRestaurantApplication.Controllers
                 restaurant.AddressId = address.AddressId;
                 restaurant.UserId = User.Identity.GetUserId();
                 restaurant.IsOpen = true;
+                restaurant.WaitRateId = waitRate.WaitRateId;
                 db.Restaurants.Add(restaurant);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Restaurant");
@@ -529,7 +535,7 @@ namespace WaiterRestaurantApplication.Controllers
             return View(restaurant);
         }
 
-/*        public ActionResult DisplayAnalytics(int restaurantId)
+        public ActionResult DisplayAnalytics(int restaurantId)
         {
             var restaurant = db.Restaurants
                 .Where(r => r.RestaurantId == restaurantId)
@@ -537,7 +543,7 @@ namespace WaiterRestaurantApplication.Controllers
 
             var tableVisits = db.TableVisits
                 .Where(t => t.RestaurantId == restaurantId)
-                .OrderByDescending(t=> t.CreatedOn)
+                .OrderByDescending(t => t.CreatedOn)
                 .ToList();
 
             RestaurantDisplayAnalyticsViewModel viewModel = new RestaurantDisplayAnalyticsViewModel();
@@ -545,15 +551,14 @@ namespace WaiterRestaurantApplication.Controllers
             viewModel.TableVisits = tableVisits;
 
             List<TableVisitColumn> tableVisitColumns = new List<TableVisitColumn>();
-            TableVisitColumn tableVisitColumn;
-            for (int i=tableVisits.Count-1; i>0; i--)
+            TableVisitColumn tableVisitColumn = new TableVisitColumn();
+            for (int i = tableVisits.Count - 1; i > 0; i--)
             {
-                if ( i == tableVisits.Count-1 )
+                if (i == tableVisits.Count - 1)
                 {
-                    tableVisitColumn = new TableVisitColumn();
                     tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
                     tableVisitColumn.TotalVisits++;
-                    if ( tableVisits[i].IsHostEntry )
+                    if (tableVisits[i].IsHostEntry)
                     {
                         tableVisitColumn.HostEnteredVisits++;
                     }
@@ -562,12 +567,38 @@ namespace WaiterRestaurantApplication.Controllers
                         tableVisitColumn.DinerEnteredVisits++;
                     }
                 }
-
+                if ( tableVisits[i].CreatedOn.Date == tableVisits[i+1].CreatedOn.Date)
+                {
+                    tableVisitColumn.TotalVisits++;
+                    if (tableVisits[i].IsHostEntry)
+                    {
+                        tableVisitColumn.HostEnteredVisits++;
+                    }
+                    else
+                    {
+                        tableVisitColumn.DinerEnteredVisits++;
+                    }
+                }
+                else
+                {
+                    tableVisitColumns.Add(tableVisitColumn);
+                    tableVisitColumn = new TableVisitColumn();
+                    tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
+                    tableVisitColumn.TotalVisits++;
+                    if (tableVisits[i].IsHostEntry)
+                    {
+                        tableVisitColumn.HostEnteredVisits++;
+                    }
+                    else
+                    {
+                        tableVisitColumn.DinerEnteredVisits++;
+                    }
+                }
             }
 
             return View(viewModel);
         }
 
-*/
+
     }
 }
