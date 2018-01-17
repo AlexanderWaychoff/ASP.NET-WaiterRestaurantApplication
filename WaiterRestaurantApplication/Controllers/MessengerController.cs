@@ -62,6 +62,7 @@ namespace WaiterRestaurantApplication.Controllers
             if(Body == "y")
             {
                 currentTableVisit.IsSatisfied = true;
+
                 db.SaveChanges();
             }
             if(Body == "n")
