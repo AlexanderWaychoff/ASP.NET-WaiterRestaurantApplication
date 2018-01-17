@@ -14,7 +14,7 @@ namespace WaiterRestaurantApplication.Models
         public int WaitMinutes { get; set; }
 
         public WeatherCondition WeatherCondition { get; set; }
-        public int? WeatherConditionId { get; set; }
+        public int WeatherConditionId { get; set; }
 
         public bool IsHostEntry { get; set; }
         public bool? IsSatisfied { get; set; }

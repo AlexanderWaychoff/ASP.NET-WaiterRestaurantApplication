@@ -29,11 +29,12 @@ namespace WaiterRestaurantApplication.Controllers
         public ActionResult SearchRestaurantsNearDiner()
         {
             //var addresses = db.Addresses
-                //.Where(x => x.Lat <= ; compare current location to addresses; 0.1449275362318841 = roughly 10 miles in ltd/lng
-                //.Include(x => x.Ad)
+            //.Where(x => x.Lat <= ; compare current location to addresses; 0.1449275362318841 = roughly 10 miles in ltd/lng
+            //.Include(x => x.Ad)
             var restaurantInfo = db.Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Address.City)
+                .Where(r => r.IsOpen == true)
                 .FirstOrDefault();
 
             return View(restaurantInfo);
