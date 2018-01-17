@@ -263,9 +263,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoogleMapAPI.cs" />
-    <Compile Include="Migrations\201801171723516_init.cs" />
-    <Compile Include="Migrations\201801171723516_init.Designer.cs">
-      <DependentUpon>201801171723516_init.cs</DependentUpon>
+    <Compile Include="Migrations\201801171730310_init.cs" />
+    <Compile Include="Migrations\201801171730310_init.Designer.cs">
+      <DependentUpon>201801171730310_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -399,8 +399,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801171723516_init.resx">
-      <DependentUpon>201801171723516_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801171730310_init.resx">
+      <DependentUpon>201801171730310_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
