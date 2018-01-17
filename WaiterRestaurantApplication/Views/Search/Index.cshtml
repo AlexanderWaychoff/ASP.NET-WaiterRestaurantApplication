@@ -45,10 +45,11 @@
 </div>
 
 @*Map Markers*@
+
 @foreach (var restaurant in Model)
 {
     string waitRatePercentage;
-    if ( restaurant.WaitRate.WaitRatePercentage == null )
+    if (restaurant.WaitRate.WaitRatePercentage == null)
     {
         waitRatePercentage = "N/A";
     }
@@ -66,13 +67,34 @@
     {
         estimatedWaitTime = restaurant.EstimatedWaitTime + " minutes";
     }
+    int totalWaitMinutes = 0;
+    foreach (var restaurantTime in Model)
+    {
+        totalWaitMinutes += restaurantTime.CurrentWaitMinutes;
+    }
+    int averageCurrentWaitMinutes = totalWaitMinutes / Model.Count();
 
     //Alex - write your logic here
-    string imageFolderPath = "/Content/Images";
-    string sampleIcon = "https://cdn3.iconfinder.com/data/icons/iconic-1/32/map_pin_alt-48.png";
+    string imageFolderPath = "/Content/Images/";
+    string sampleIcon = "Map-Marker-Marker-base-icon.png";
+    if (restaurant.CurrentWaitMinutes <= averageCurrentWaitMinutes - 7)
+    {
+        sampleIcon = "Map-Marker-Marker-blue-icon.png";
+    }
+    else if (restaurant.CurrentWaitMinutes >= averageCurrentWaitMinutes + 7)
+    {
+        sampleIcon = "Map-Marker-Marker-red-icon.png";
+    }
+    else
+    {
+        sampleIcon = "Map-Marker-Marker-green-icon.png";
+    }
+
+    string imageToUse = imageFolderPath + sampleIcon;
 
 
-    <span class="marker" data-iconpath="@sampleIcon" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-estimatedwaittime="@estimatedWaitTime" data-waitrate="@waitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
+
+    <span class="marker" data-iconpath="@imageToUse" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-estimatedwaittime="@estimatedWaitTime" data-waitrate="@waitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
 }
 
 
