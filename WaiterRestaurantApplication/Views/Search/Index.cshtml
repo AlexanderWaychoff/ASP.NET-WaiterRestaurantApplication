@@ -13,9 +13,10 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <p><button id="locationButton" class="btn btn-primary btn-block">Search Restaurants Near My Location</button></p>
-        <hr />
     </div>
 </div>
+
+<hr />
 
 <div class="row">
     <div class="col-md-12" style="text-align: center;">
@@ -35,13 +36,19 @@
         </form>
     </div>
 </div>
-<div id="validationErrors"></div>
-@*YOU ARE HERE!!!!!!!!!!!!!!!!
-    DISPLAY ALL OF THE RESTAURANTS ON THE MAP!!!!!!!!!!!!!!!!*@
 
+<div class="row" style="margin-top: 40px;">
+    <div class="col-md-4 col-md-offset-4" id="validationErrors" style="display: none;">
+        <div class="alert alert-danger" role="alert">
+            <!--Error messages-->
+        </div>
+    </div>
+</div>
+
+@*Map Markers*@
 @foreach (var restaurant in Model)
 {
-    <p>@restaurant.RestaurantName</p>
+    <span class="marker" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
 }
 
 

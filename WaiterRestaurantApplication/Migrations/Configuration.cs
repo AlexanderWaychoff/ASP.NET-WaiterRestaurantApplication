@@ -22,17 +22,16 @@ namespace WaiterRestaurantApplication.Migrations
         protected override void Seed(WaiterRestaurantApplication.Models.ApplicationDbContext context)
         {
             //Seed States table with all US States
-            //Note: we'll have to set up file paths for all three members of the team.
             string seedFile = "~/CSV/SeedData/";//states.csv removed from end of seedFile
             string filePath = GetMapPath(seedFile);
-            //alex's file path
-<<<<<<< HEAD
+
+
+            //alex's file path////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
-            bool fileExists = File.Exists(filePath);
-=======
             //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
+            //end of alex's stuff/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             bool fileExists = File.Exists(filePath + "states.csv");
->>>>>>> 9a35fc4970e612b058f7793222dda736b784b365
             if (fileExists)
             {
                 List<State> states = new List<State>();

@@ -1,16 +1,29 @@
 ﻿$(document).ready(function () {
 
     let map;
-    let marker;
+    let userMarker;
 
+    //User's info window
+    var infowindow = new google.maps.InfoWindow({
+        content: 'You are here'
+    });
+
+    //display the map
     function initMap(latitude, longtitude) {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,
             center: { lat: latitude, lng: longtitude }
         });
-        marker = new google.maps.Marker({
+        userMarker = new google.maps.Marker({
             position: { lat: latitude, lng: longtitude },
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10
+            },
             map: map
+        });
+        userMarker.addListener('click', function () {
+            infowindow.open(map, userMarker);
         });
     }
 
@@ -22,13 +35,7 @@
     //43.0117° N, 88.2315° W
     initMap(43.0117, -88.2315);
 
-    //$("#addressCreateForm :input").change(function () {
-    //    $("#submitButton").fadeOut(function () {
-    //        $("#map").fadeOut();
-    //        $("#search").fadeIn();
-    //    });
-    //});
-
+    //Initial action to take after the diner does a search by address
     let errorMessage = [];
     $('#search')
         .click(function (event) {
@@ -52,7 +59,6 @@
                 let lat;
                 let lng;
 
-                console.log(googleMapUrl);
                 $.getJSON(googleMapUrl)
                 .done(function (data) {
                     let location = data.results[0].geometry.location;
@@ -88,19 +94,22 @@
             }
         });
 
+    //move the user's map marker
     function moveMarker(latitude, longtitude)
     {
         map.setCenter({ lat: latitude, lng: longtitude });
-        marker.setPosition({ lat: latitude, lng: longtitude });
+        userMarker.setPosition({ lat: latitude, lng: longtitude });
     }
 
+    //clean up the string
     function cleanCode(c) {
         return c.replace(/[^A-Za-z0-9_]/g, "");
     }
 
+    //validate the form data
     function validate() {
         isValid = true;
-        if ($('#address').val() == "") {
+        if ($('#streetAddress').val() == "") {
             errorMessage.push("You must enter a street address.");
             isValid = false;
         }
@@ -111,76 +120,66 @@
         return isValid;
     }
 
-    //NEW STUFF STARTS HERE///////////////////////////////////////////////////////////////
-
-    // Note: This example requires that you consent to location sharing when
-    // prompted by your browser. If you see the error "The Geolocation service
-    // failed.", it means you probably did not give permission for the browser to
-    // locate you.
-    //var map, infoWindow;
-    //function initMap() {
-    //    map = new google.maps.Map(document.getElementById('map'), {
-    //        center: { lat: -34.397, lng: 150.644 },
-    //        zoom: 6
-    //    });
-    //    infoWindow = new google.maps.InfoWindow;
-
-    //    // Try HTML5 geolocation.
-    //    if (navigator.geolocation) {
-    //        console.log("Geolacation activated");
-    //        navigator.geolocation.getCurrentPosition(function (position) {
-    //            var pos = {
-    //                lat: position.coords.latitude,
-    //                lng: position.coords.longitude
-    //            };
-
-    //            infoWindow.setPosition(pos);
-    //            infoWindow.setContent('Location found.');
-    //            infoWindow.open(map);
-    //            map.setCenter(pos);
-    //        }, function () {
-    //            handleLocationError(true, infoWindow, map.getCenter());
-    //        });
-    //    } else {
-    //        // Browser doesn't support Geolocation
-    //        handleLocationError(false, infoWindow, map.getCenter());
-    //    }
-    //}
-
-    //function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    //    infoWindow.setPosition(pos);
-    //    infoWindow.setContent(browserHasGeolocation ?
-    //                          'Error: The Geolocation service failed.' :
-    //                          'Error: Your browser doesn\'t support geolocation.');
-    //    infoWindow.open(map);
-    //}
-
-    //initMap();
-
-    //MORE CURRENT LOCATION STUFF///////////////////////////////////////////////////////////
-
-    $('#locationButton').click(function () {
-        console.log("clicked");
-        getLocation();
+    //set up the restaurant markers
+    let markers = [];
+    $(".marker").each(function () {
+        let mapData = $(this).data();
+        //addMarker(mapData.lat, mapData.lng, mapData.count);
+        let markerObject = {};
+        markerObject.lat = parseFloat(mapData.lat);
+        markerObject.lng = parseFloat(mapData.lng);
+        markerObject.restaurantName = mapData.name;
+        markerObject.waitTime = mapData.waittime;
+        markers.push(markerObject);
     });
+    addMarkers(markers);
 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(success, error);
-        } else {
-            $("#locationError").innerHTML = "Geolocation is not supported by this browser.";
+    //display the markers
+    function addMarkers(markers) {
+        for (let i = 0; i < markers.length; i++)
+        {
+            let infowindow = new google.maps.InfoWindow({
+                content: '<h4>' + markers[i].restaurantName + '</h4><p><strong>Wait Time:</strong> ' + markers[i].waitTime + ' minutes</p><p><a href="#">Get On The List!</a></p>'
+            });
+            let restaurantMarker = new google.maps.Marker({
+                position: { lat: markers[i].lat, lng: markers[i].lng },
+                map: map
+            });
+            restaurantMarker.addListener('click', function () {
+                infowindow.open(map, restaurantMarker);
+            });
         }
     }
 
-    function success() {
-        console.log("success");
+    //When the user clicks the 'Search by my location' button
+    $('#locationButton').click(function () {
+        //Use HTML5 to get the user's current location
+        if (navigator.geolocation) {
+            console.log("Geolacation activated");
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                //move the map marker to the user's location
+                $("#map").fadeOut(function () {
+                    moveMarker(pos.lat, pos.lng);
+                    $("#map").fadeIn();
+                });
+
+            }, function () {
+                handleLocationError(true);
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            console.log("Your browser doesn\'t support geolocation.");
+            handleLocationError(false);
+        }
+    });
+
+    function handleLocationError(browserHasGeolocation) {
+        message = browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation.';
+        alert(message);
     }
-
-    function error() {
-        console.log("success");
-    }
-
-
-    //////////////////////////////////////////////////////////////////////////////////////
 
 });
