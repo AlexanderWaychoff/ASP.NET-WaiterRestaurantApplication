@@ -380,6 +380,7 @@
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Restaurant\DinerConfirmation.cshtml" />
     <Content Include="Views\Restaurant\DisplayAnalytics.cshtml" />
+    <Content Include="Views\Subscription\Cancel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,14 @@
+﻿@using WaiterRestaurantApplication.Models;
+@model WaiterRestaurantApplication.Models.Restaurant
+@{
+    ViewBag.Title = "Cancel Subscription";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Cancel Subscription for @Model.RestaurantName</h2>
+<div class="alert alert-danger">
+    <p>Are you sure you want to cancel the Waiter subscription for @Model.RestaurantName</p>
+    <p>
+        @Html.ActionLink("Confirm Cancellation", "ConfirmCancel", "Subscription", new { restaurantId = Model.RestaurantId }, new { @class = "btn btn-default" })
+    </p>
+</div>

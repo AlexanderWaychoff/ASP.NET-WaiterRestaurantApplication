@@ -133,6 +133,7 @@
         markerObject.estimatedWaitTime = mapData.estimatedwaittime;
         markerObject.waitRate = mapData.waitrate;
         markerObject.restaurantId = mapData.restaurantid;
+        markerObject.iconPath = mapData.iconpath;
         markers.push(markerObject);
     });
     addMarkers(markers);
@@ -152,7 +153,8 @@
             });
             let restaurantMarker = new google.maps.Marker({
                 position: { lat: markers[i].lat, lng: markers[i].lng },
-                map: map
+                map: map,
+                icon: markers[i].iconPath
             });
             restaurantMarker.addListener('click', function () {
                 infowindow.open(map, restaurantMarker);
