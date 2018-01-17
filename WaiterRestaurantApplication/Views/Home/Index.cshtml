@@ -2,15 +2,15 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>Welcome to Waiter.</h1>
-    <p class="lead">Add yourself to the list and avoid the wait!</p>
-    <p>
-        <a href="@Url.Action("Index", "Search")" class="btn btn-success"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search Restaurants</a>
+<div class="jumbotron" style="background-color: #aadbfe;">
+    <p class="text-center"><img src="/Content/Images/waiter_logo-600x334.png" width="600" height="334" title="Waiter Logo" alt="Waiter Logo"/></p>
+    <p class="lead text-center">Add yourself to the list and avoid the wait!</p>
+    <p class="text-center">
+        <a href="@Url.Action("Index", "Search")" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search Restaurants</a>
     </p>
 </div>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-4">
         <h2>Getting started</h2>
         <p>
@@ -30,4 +30,4 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>
-</div>
+</div>*@
