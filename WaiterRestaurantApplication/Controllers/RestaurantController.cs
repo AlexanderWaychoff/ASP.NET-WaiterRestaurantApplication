@@ -380,7 +380,7 @@ namespace WaiterRestaurantApplication.Controllers
             var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
             restaurant.PendingEmployees.Add(user);
             db.SaveChanges();
-            return RedirectToAction("DisplayMyRestaurants", "Restaurant");
+            return View("EmploymentConfirmed");
         }
 
         public ActionResult ConfirmEmployees(int restaurantId)

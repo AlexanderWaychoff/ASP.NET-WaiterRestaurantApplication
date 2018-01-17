@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Employment Confirmed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Employment Confirmed</h2>
+<div class="alert alert-success">
+    <p>You have confirmed your employment. Once your manager approves, you will have access to the wait list.</p>
+    <p>
+        @Html.ActionLink("Back to My Restaurants", "DisplayMyRestaurants", "Restaurant", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+    </p>
+</div>
+
