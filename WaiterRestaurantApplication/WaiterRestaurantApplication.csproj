@@ -288,6 +288,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="OpenWeatherWeather.cs" />
+    <Compile Include="TableVisitColumn.cs" />
     <Compile Include="WeatherJSONReader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +383,7 @@
     <Content Include="Views\Restaurant\DuplicateAddress.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Restaurant\DinerConfirmation.cshtml" />
+    <Content Include="Views\Restaurant\DisplayAnalytics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,6 +10,6 @@ namespace WaiterRestaurantApplication.Models
 
         public int WaitRateId { get; set; }
 
-        public int? WateRatePercentage { get; set; }
+        public int? WaitRatePercentage { get; set; }
     }
 }
