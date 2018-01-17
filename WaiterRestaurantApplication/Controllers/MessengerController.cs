@@ -17,7 +17,7 @@ namespace WaiterRestaurantApplication.Controllers
         private string authToken = "f261d85394f7213a2ac3bc294f64802c";
         private string TwilioAccountPhoneNumber = "+14144090727";
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        private AnalyticsController analytics = new AnalyticsController();
 
         public MessengerController()
         {
@@ -62,12 +62,13 @@ namespace WaiterRestaurantApplication.Controllers
             if(Body == "y")
             {
                 currentTableVisit.IsSatisfied = true;
-
+                analytics.CalculateWaitRate(currentTableVisit);
                 db.SaveChanges();
             }
             if(Body == "n")
             {
                 currentTableVisit.IsSatisfied = false;
+                analytics.CalculateWaitRate(currentTableVisit);
                 db.SaveChanges();
             }
 

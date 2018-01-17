@@ -212,7 +212,8 @@ namespace WaiterRestaurantApplication.Controllers
         {
             TableVisit currentTableVisit = db.TableVisits.Find(tableVisitId);
             int currentRestaurantId = currentTableVisit.RestaurantId;
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
+            Restaurant currentResaurant = db.Restaurants.Find(currentRestaurantId);
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter."+currentResaurant.RestaurantName+" had a table ready for you X minutes earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)") ;
             ViewBag.infoMessage = "You have Removed " + currentTableVisit.DinerName + "'s reservation.";
             currentTableVisit.IsActive = false;
             db.SaveChanges();
@@ -222,7 +223,8 @@ namespace WaiterRestaurantApplication.Controllers
         public ActionResult RemoveFromLine(TableVisit currentTableVisit)
         {
             int currentRestaurantId = currentTableVisit.RestaurantId;
-            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
+            Restaurant currentResaurant = db.Restaurants.Find(currentRestaurantId);
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter." + currentResaurant.RestaurantName + " had a table ready for you X minutes earlier than stated. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
             currentTableVisit.IsActive = false;
             db.SaveChanges();
             ViewBag.infoMessage = currentTableVisit.DinerName + "'s reservation has been removed due to grace period reservation.";
