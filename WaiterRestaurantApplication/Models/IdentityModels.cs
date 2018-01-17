@@ -53,6 +53,6 @@ namespace WaiterRestaurantApplication.Models
 
         public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.WeatherCondition> WeatherConditions { get; set; }
 
-        public DbSet<WaitRate> WaitRate { get; set; }
+        public System.Data.Entity.DbSet<WaiterRestaurantApplication.Models.WaitRate> WaitRate { get; set; }
     }
 }

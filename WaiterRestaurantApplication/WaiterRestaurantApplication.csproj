@@ -249,6 +249,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\DinerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Models\TableVisit.cs" />
     <Compile Include="Models\TableVisitViewModels.cs" />
     <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\WaitRate.cs" />
     <Compile Include="Models\WeatherCondition.cs" />
     <Compile Include="Models\ZipCode.cs" />
     <Compile Include="OpenWeatherMain.cs" />
@@ -377,6 +379,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Analytics\" />
     <Folder Include="Views\Messenger\" />
   </ItemGroup>
   <ItemGroup>

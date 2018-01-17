@@ -7,8 +7,9 @@ namespace WaiterRestaurantApplication.Models
 {
     public class WaitRate
     {
+
         public int WaitRateId { get; set; }
 
-        public string WateRatePercentage { get; set; }
+        public int? WateRatePercentage { get; set; }
     }
 }
