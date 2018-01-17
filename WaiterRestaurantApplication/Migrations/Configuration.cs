@@ -22,11 +22,15 @@ namespace WaiterRestaurantApplication.Migrations
         protected override void Seed(WaiterRestaurantApplication.Models.ApplicationDbContext context)
         {
             //Seed States table with all US States
-            //Note: we'll have to set up file paths for all three members of the team.
             string seedFile = "~/CSV/SeedData/";//states.csv removed from end of seedFile
             string filePath = GetMapPath(seedFile);
-            //alex's file path
+
+
+            //alex's file path////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
             //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
+            //end of alex's stuff/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             bool fileExists = File.Exists(filePath + "states.csv");
             if (fileExists)
             {
@@ -105,12 +109,14 @@ namespace WaiterRestaurantApplication.Migrations
             if (fileExists)
             {
                 List<Restaurant> restaurants = new List<Restaurant>();
+                List<WaitRate> waitRates = new List<WaitRate>();
                 using (TextFieldParser parser = new TextFieldParser(filePath + "restaurants.csv"))
                 {
                     int whileCount = 0;
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
                     Restaurant restaurant;
+                    WaitRate waitRate;
                     while (!parser.EndOfData)
                     {
                         whileCount += 1;
@@ -121,6 +127,7 @@ namespace WaiterRestaurantApplication.Migrations
                             Console.ReadKey(true);
                         }
                         restaurant = new Restaurant();
+                        waitRate = new WaitRate();
                         restaurant.RestaurantId = whileCount;
                         restaurant.RestaurantName = fields[0];
                         restaurant.AddressId = Convert.ToInt32(fields[1]);
@@ -130,7 +137,7 @@ namespace WaiterRestaurantApplication.Migrations
                         restaurant.PeopleBeforeWarning = Convert.ToInt32((fields[5]));
                         restaurant.GracePeriodMinutes = Convert.ToInt32(fields[6]);
                         restaurant.CurrentWaitMinutes = Convert.ToInt32(fields[7]);
-                        restaurant.WaitRate = random.Next(5, 95);
+                        waitRate.WateRatePercentage = random.Next(5, 95);
                         restaurants.Add(restaurant);
                     }
                 }

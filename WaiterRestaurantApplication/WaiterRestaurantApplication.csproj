@@ -45,9 +45,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -252,7 +254,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessengerController.cs" />
     <Compile Include="Controllers\RestaurantController.cs" />
-    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\TableVisitController.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Models\TableVisit.cs" />
     <Compile Include="Models\TableVisitViewModels.cs" />
     <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\WaitRate.cs" />
     <Compile Include="Models\WeatherCondition.cs" />
     <Compile Include="Models\ZipCode.cs" />
     <Compile Include="OpenWeatherMain.cs" />
@@ -367,11 +369,12 @@
     <Content Include="Views\Restaurant\ActivateRestaurant.cshtml" />
     <Content Include="Views\Subscription\Index.cshtml" />
     <Content Include="Views\Restaurant\DuplicateAddress.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Restaurant\DinerConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Messenger\" />
-    <Folder Include="Views\Search\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

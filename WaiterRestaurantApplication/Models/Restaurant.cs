@@ -34,6 +34,7 @@ namespace WaiterRestaurantApplication.Models
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }
 
-
+        public WaitRate WaitRate { get; set; }
+        public int WaitRateId { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace WaiterRestaurantApplication.Controllers
             
             var tableVisits = db.TableVisits
                 .Where(t => t.RestaurantId == restaurantId)
+                .Where(t => t.IsActive == true)
                 .OrderBy(t => t.CreatedOn)
                 .ToList();
 
@@ -59,23 +60,18 @@ namespace WaiterRestaurantApplication.Controllers
         }
 
         // GET: TableVisit/Create
-        public ActionResult Create(int restaurantId)
+        public ActionResult Create(int restaurantId, bool isHostEntry)
         {
-
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            if (!User.IsInRole("RestaurantEmployee"))
-            {
-                return HttpNotFound();
-            }
-
             var restaurant = db.Restaurants
                 .Include(r => r.TableVisits)
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
-            return View(restaurant);
+
+            TableVisitCreateModel viewModel = new TableVisitCreateModel();
+            viewModel.Restaurant = restaurant;
+            viewModel.IsHostEntry = isHostEntry;
+
+            return View(viewModel);
         }
 
         // POST: TableVisit/Create
@@ -98,14 +94,8 @@ namespace WaiterRestaurantApplication.Controllers
                 .Where(r => r.RestaurantId == restaurantId)
                 .FirstOrDefault();
 
-            //Alex...add your magic below...
             string cityName = restaurant.Address.City.Name;
-            //need to get weather condition first - It cannot be nullable
-            //dummy weather condition:
             WeatherCondition weatherCondition = new WeatherCondition(cityName);
-            //weatherCondition.Temperature = 75;
-            //weatherCondition.WeatherDescription = "Partly Cloudy";
-
 
             TableVisit tableVisit = new TableVisit();
             tableVisit.DinerName = dinerName;
@@ -123,8 +113,12 @@ namespace WaiterRestaurantApplication.Controllers
 
             restaurant.TableVisits.Add(tableVisit);
             db.SaveChanges();
-            TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
-            return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId});
+            if(isHostEntry)
+            {
+                TempData["tableVisitMessage"] = "Added " + dinerName + " to the wait list.";
+                return RedirectToAction("Index", "TableVisit", new { restaurantId = restaurantId });
+            }
+            return RedirectToAction("DinerConfirmation", "Restaurant", new { restaurantId = restaurantId });
         }
 
         // GET: TableVisit/Edit/5
@@ -187,21 +181,23 @@ namespace WaiterRestaurantApplication.Controllers
         }
 
 
-        public ActionResult SendTableReadyNotification(TableVisit currentTableVisit)
+        public ActionResult SendTableReadyNotification(int TableVisitId)
         {
-
+            TableVisit currentTableVisit = db.TableVisits.Find(TableVisitId);
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table is ready!");
             currentTableVisit.GracePeriodStart = DateTime.Now;
-
-            return RedirectToAction("Index");
+            ViewBag.infoMessage = "Your Table Notification has been sent.";
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
 
         }
 
-        public ActionResult WarnDiner(TableVisit currentTableVisit)
+        private void WarnDiner(int TableVisitId)
         {
+            TableVisit currentTableVisit = db.TableVisits.Find(TableVisitId);
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Your Table will be ready Soon!" );
             currentTableVisit.IsWarned = true;
-            return RedirectToAction("Index");
+
+            //return RedirectToAction("Index","TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
         }
 
         private int calculateWaitTime(TableVisit currentTableVisit)
@@ -212,12 +208,25 @@ namespace WaiterRestaurantApplication.Controllers
             return (int) (gracePeriod.Subtract(currentTableVisit.CreatedOn).TotalMinutes);
         }
 
+        public ActionResult HostRemoveFromLine(int tableVisitId)
+        {
+            TableVisit currentTableVisit = db.TableVisits.Find(tableVisitId);
+            int currentRestaurantId = currentTableVisit.RestaurantId;
+            messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
+            ViewBag.infoMessage = "You have Removed " + currentTableVisit.DinerName + "'s reservation.";
+            currentTableVisit.IsActive = false;
+            db.SaveChanges();
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = currentRestaurantId });
+        }
+
         public ActionResult RemoveFromLine(TableVisit currentTableVisit)
         {
+            int currentRestaurantId = currentTableVisit.RestaurantId;
             messenger.SendSMSMessage(currentTableVisit.DinerPhone, "Thank you for using Waiter. Did you enjoy our service. (Type 'y' for yes or 'n' for no)");
-            db.TableVisits.Remove(currentTableVisit);
+            currentTableVisit.IsActive = false;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            ViewBag.infoMessage = currentTableVisit.DinerName + "'s reservation has been removed due to grace period reservation.";
+            return RedirectToAction("Index", "TableVisit", new { restaurantId = currentTableVisit.RestaurantId });
         }
 
         protected override void Dispose(bool disposing)
@@ -257,7 +266,7 @@ namespace WaiterRestaurantApplication.Controllers
                     peopleInLine += tableVisits[i].PartySize;
                     if(peopleInLine >= resturant.PeopleBeforeWarning)
                     {
-                        WarnDiner(tableVisits[i+1]);
+                        WarnDiner(tableVisits[i+1].TableVisitId);
                         break;
                     }
                 }
@@ -275,8 +284,8 @@ namespace WaiterRestaurantApplication.Controllers
                     {
                         messenger.SendSMSMessage(tableVisits[i].DinerPhone, "Your Grace period has expired. You have lost your reservation.");
                         tableVisits[i].IsActive = false;
-                        RemoveFromLine(tableVisits[i]);
                         tableVisits[i].IsNoShow = true;
+                        RemoveFromLine(tableVisits[i]);
                     }
                 }
             }

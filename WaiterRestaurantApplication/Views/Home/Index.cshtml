@@ -2,13 +2,15 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">Welcome Diners.  Use the button below to find restaurants nearby.</p>
-    <p><a @Html.ActionLink("Restaurants near me", "SearchRestaurantOptions", "Diner", null, new { @class = "btn btn-success btn-xs" })</a></p>
+<div class="jumbotron" style="background-color: #aadbfe;">
+    <p class="text-center"><img src="/Content/Images/waiter_logo-600x334.png" width="600" height="334" title="Waiter Logo" alt="Waiter Logo"/></p>
+    <p class="lead text-center">Add yourself to the list and avoid the wait!</p>
+    <p class="text-center">
+        <a href="@Url.Action("Index", "Search")" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search Restaurants</a>
+    </p>
 </div>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-4">
         <h2>Getting started</h2>
         <p>
@@ -28,4 +30,4 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>
-</div>
+</div>*@
