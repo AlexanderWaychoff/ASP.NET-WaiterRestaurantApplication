@@ -372,6 +372,8 @@
     <Content Include="Views\Restaurant\ActivateRestaurant.cshtml" />
     <Content Include="Views\Subscription\Index.cshtml" />
     <Content Include="Views\Restaurant\DuplicateAddress.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Restaurant\DinerConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

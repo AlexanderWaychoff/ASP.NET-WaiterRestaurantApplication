@@ -18,7 +18,7 @@
 </form>
 
 <p style="margin-top: 20px;">
-    @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.Restaurant.RestaurantId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Add Diner To Wait List", "Create", "TableVisit", new { restaurantId = Model.Restaurant.RestaurantId, isHostEntry = true }, new { @class = "btn btn-primary" })
 </p>
 @if (Model.TableVisits.Count > 0)
 {
@@ -27,6 +27,7 @@
             <th>Diner Name</th>
             <th>Party Size</th>
             <th>Phone Number</th>
+            <th>Host Entry?</th>
             <th>Actions</th>
         </tr>
 
@@ -36,6 +37,7 @@
                 <td>@tableVisit.DinerName</td>
                 <td>@tableVisit.PartySize</td>
                 <td>@String.Format("{0:(###) ###-####}", Convert.ToInt64(tableVisit.DinerPhone))</td>
+                <td>@tableVisit.IsHostEntry</td>
                 <td>
                     @Html.ActionLink("Send 'Table Ready' Notification", "SendTableReadyNotification", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-success btn-xs" })
                     @Html.ActionLink("Remove from Wait List", "HostRemoveFromLine", "TableVisit", new { tableVisitId = tableVisit.TableVisitId }, new { @class = "btn btn-danger btn-xs" })

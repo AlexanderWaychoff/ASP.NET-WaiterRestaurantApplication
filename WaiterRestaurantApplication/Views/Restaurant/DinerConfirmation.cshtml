@@ -1,0 +1,15 @@
+﻿@model WaiterRestaurantApplication.Models.Restaurant
+@{
+    ViewBag.Title = "Diner Confirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>You're on the list!</h2>
+<div class="alert alert-success">
+    <p>You have been added to the wait list at @Model.RestaurantName! The current stated wait time is @Model.CurrentWaitMinutes minutes.</p>
+    <p>We will send you a text message when your table is almost ready!</p>
+    <p>
+        @Html.ActionLink("Return to Restaurant Search", "Index", "Search", null, new { @class = "btn btn-default" })
+    </p>
+</div>
+
