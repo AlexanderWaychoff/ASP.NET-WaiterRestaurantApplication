@@ -66,8 +66,9 @@
                     <div class="alert alert-danger">@restaurant.RestaurantName is currently not showing up in search results. Please be sure to set your open time, close time and open-for-business in your settings.</div>
                 }
                 <p>
-                    <a href="@Url.Action("Edit", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-success"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a>
+                    <a href="@Url.Action("Edit", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-warning"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a>
                     <a href="@Url.Action("Index", "Subscription", new { restaurantId = restaurant.RestaurantId })" class="btn btn-info"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> My Subscription</a>
+                    <a href="@Url.Action("DisplayAnalytics", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-success"><span class="glyphicon glyphicon-signal" aria-hidden="true"></span> Analytics</a>
                     <a href="@Url.Action("Delete", "Restaurant", new { restaurantId = restaurant.RestaurantId })" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete Restaurant</a>
                 </p>
             </div>
