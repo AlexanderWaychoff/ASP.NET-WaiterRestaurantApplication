@@ -36,5 +36,7 @@ namespace WaiterRestaurantApplication.Models
 
         public WaitRate WaitRate { get; set; }
         public int WaitRateId { get; set; }
+
+        public int EstimatedWaitTime { get; set; }
     }
 }

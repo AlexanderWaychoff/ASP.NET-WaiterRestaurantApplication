@@ -32,5 +32,48 @@ namespace WaiterRestaurantApplication.Controllers
 
             return View(restaurant);
         }
+        public ActionResult Cancel(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.Subscription)
+                .Include(r => r.Subscription.SubscriptionType)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
+            return View(restaurant);
+        }
+
+        public ActionResult ConfirmCancel(int restaurantId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!User.IsInRole("RestaurantManager"))
+            {
+                return HttpNotFound();
+            }
+
+            var restaurant = db.Restaurants
+                .Include(r => r.Subscription)
+                .Include(r => r.Subscription.SubscriptionType)
+                .Where(r => r.RestaurantId == restaurantId)
+                .FirstOrDefault();
+
+            restaurant.Subscription.AutoRenewal = false;
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Subscription", new { restaurantId = restaurantId });
+        }
+
     }
 }

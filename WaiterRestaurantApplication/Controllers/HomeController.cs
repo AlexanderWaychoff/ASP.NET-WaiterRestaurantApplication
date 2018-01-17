@@ -28,6 +28,9 @@ namespace WaiterRestaurantApplication.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            AnalyticsController analytic = new AnalyticsController();
+            analytic.CalculateEstimatedWaitTimes(1);
+
             return View();
         }
     }
