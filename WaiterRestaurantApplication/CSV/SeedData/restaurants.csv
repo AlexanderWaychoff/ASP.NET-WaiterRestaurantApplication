@@ -1,8 +1,13 @@
-"Gouda's Italian Deli",1,"10am","6pm",true,0,0,0
-"Jing's",2,"11:30am","9pm",true,0,0,0
-"Swig",3,"11am","10pm",true,0,0,0
-"Onesto",4,"11am","10pm",true,0,0,0
-"Aladdin",5,"10am","8pm",true,0,0,0
-"Pita Pit",6,"10am","9pm",true,0,0,0
-"Amilinda",7,"5pm","9pm",true,0,0,0
-"Cubanitas",8,"11am","11pm",true,0,0,0
+"Gouda's Italian Deli",1,"10am","6pm",true,0,0,25
+"Jing's",2,"11:30am","9pm",true,0,0,30
+"Swig",3,"11am","10pm",true,0,0,35
+"Onesto",4,"11am","10pm",true,0,0,40
+"Aladdin",5,"10am","8pm",true,0,0,35
+"Pita Pit",6,"10am","9pm",true,0,0,55
+"Amilinda",7,"5pm","9pm",true,0,0,45
+"Cubanitas",8,"11am","11pm",true,0,0,50
+"Casablanca",9,"11am","2am",true,0,0,35
+"Emperor of China",10,"11:30am","9pm",true,0,0,60
+"Hosed on Brady",11,"2pm","2am",true,0,0,25
+"Easy Tiger",12,"3pm","10pm",true,0,0,35
+"King Crab Shack",13,"11am","2am",true,0,0,40

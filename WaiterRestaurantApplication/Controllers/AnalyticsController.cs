@@ -31,7 +31,7 @@ namespace WaiterRestaurantApplication.Controllers
 
             int WaitRate = Convert.ToInt32((yesTotal / totalRatings)*100);
 
-            //currentRestaurant.WaitRate.WateRatePercentage = WaitRate;
+            currentRestaurant.WaitRate.WateRatePercentage = WaitRate;
         }
         // GET: Analytics
         public ActionResult Index()
