@@ -27,7 +27,6 @@ namespace WaiterRestaurantApplication.Migrations
 
 
             //alex's file path////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
             //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
             //end of alex's stuff/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -128,6 +127,7 @@ namespace WaiterRestaurantApplication.Migrations
                         }
                         restaurant = new Restaurant();
                         waitRate = new WaitRate();
+                        //add waitrate to list and save to context
                         restaurant.RestaurantId = whileCount;
                         restaurant.RestaurantName = fields[0];
                         restaurant.AddressId = Convert.ToInt32(fields[1]);
@@ -137,11 +137,15 @@ namespace WaiterRestaurantApplication.Migrations
                         restaurant.PeopleBeforeWarning = Convert.ToInt32((fields[5]));
                         restaurant.GracePeriodMinutes = Convert.ToInt32(fields[6]);
                         restaurant.CurrentWaitMinutes = Convert.ToInt32(fields[7]);
+                        restaurant.WaitRateId = whileCount;
+                        waitRate.WaitRateId = whileCount;
                         waitRate.WateRatePercentage = random.Next(5, 95);
                         restaurants.Add(restaurant);
+                        waitRates.Add(waitRate);
                     }
                 }
                 context.Restaurants.AddOrUpdate(restaurants.ToArray());
+                context.WaitRate.AddOrUpdate(waitRates.ToArray());
                 context.SaveChanges();
             }
 
@@ -233,7 +237,7 @@ namespace WaiterRestaurantApplication.Migrations
 
                 }
                 context.TableVisits.AddOrUpdate(tableVisits.ToArray());
-                context.SaveChanges();
+                //context.SaveChanges();
             }
 
             int amountOfTableVisitsToAddForToday = 10;
@@ -278,7 +282,7 @@ namespace WaiterRestaurantApplication.Migrations
                 tableVisit.CreatedOn = DateTime.Now;
 
                 tableVisitsToday.Add(tableVisit);
-                context.SaveChanges();
+                //context.SaveChanges();
             }
             context.TableVisits.AddOrUpdate(tableVisitsToday.ToArray());
 
