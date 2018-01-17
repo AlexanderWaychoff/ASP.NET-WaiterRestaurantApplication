@@ -145,7 +145,7 @@
                     '<h4>' + markers[i].restaurantName + '</h4>' +
                     '<p><strong>Stated Wait Time:</strong> ' + markers[i].waitTime + ' minutes</p>' +
                     '<p><strong>Average Wait Time:</strong> ' + '45' + ' minutes</p>' +
-                    '<p><strong>Wait Rate:</strong> ' + markers[i].waitRate + '%</p>' +
+                    '<p><strong>Wait Rate:</strong> ' + markers[i].waitRate + '</p>' +
                     '<p><a href="/TableVisit/Create?restaurantId=' + markers[i].restaurantId + '&isHostEntry=false" class="btn btn-primary">Get On The List!</a></p>'
 
             });

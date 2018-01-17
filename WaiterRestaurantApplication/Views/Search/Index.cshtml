@@ -48,7 +48,16 @@
 @*Map Markers*@
 @foreach (var restaurant in Model)
 {
-    <span class="marker" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-waitrate="@restaurant.WaitRate.WaitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
+    string waitRatePercentage;
+    if ( restaurant.WaitRate.WaitRatePercentage == null )
+    {
+        waitRatePercentage = "N/A";
+    }
+    else
+    {
+        waitRatePercentage = restaurant.WaitRate.WaitRatePercentage.ToString() + "%";
+    }
+    <span class="marker" data-restaurantid="@restaurant.RestaurantId" data-name="@restaurant.RestaurantName" data-waittime="@restaurant.CurrentWaitMinutes" data-waitrate="@waitRatePercentage" data-lat="@restaurant.Address.Lat" data-lng="@restaurant.Address.Lng"></span>
 }
 
 

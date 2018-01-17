@@ -110,7 +110,6 @@ namespace WaiterRestaurantApplication.Controllers
             }
 
             WaitRate waitRate = new WaitRate();
-            waitRate.WaitRatePercentage = 100;
             db.WaitRate.Add(waitRate);
             db.SaveChanges();
 
@@ -543,16 +542,14 @@ namespace WaiterRestaurantApplication.Controllers
 
             var tableVisits = db.TableVisits
                 .Where(t => t.RestaurantId == restaurantId)
-                .OrderByDescending(t => t.CreatedOn)
+                .OrderBy(t => t.CreatedOn)
                 .ToList();
-
-            RestaurantDisplayAnalyticsViewModel viewModel = new RestaurantDisplayAnalyticsViewModel();
-            viewModel.Restaurant = restaurant;
-            viewModel.TableVisits = tableVisits;
 
             List<TableVisitColumn> tableVisitColumns = new List<TableVisitColumn>();
             TableVisitColumn tableVisitColumn = new TableVisitColumn();
-            for (int i = tableVisits.Count - 1; i > 0; i--)
+
+            //TO DO: REFACTOR THIS TERRIBLE SPAGHETTI CODE!!! BREAK UP INTO SMALLER HELPER METHODS
+            for (int i = tableVisits.Count - 1; i >= 0; i--)
             {
                 if (i == tableVisits.Count - 1)
                 {
@@ -567,34 +564,74 @@ namespace WaiterRestaurantApplication.Controllers
                         tableVisitColumn.DinerEnteredVisits++;
                     }
                 }
-                if ( tableVisits[i].CreatedOn.Date == tableVisits[i+1].CreatedOn.Date)
-                {
-                    tableVisitColumn.TotalVisits++;
-                    if (tableVisits[i].IsHostEntry)
-                    {
-                        tableVisitColumn.HostEnteredVisits++;
-                    }
-                    else
-                    {
-                        tableVisitColumn.DinerEnteredVisits++;
-                    }
-                }
                 else
                 {
-                    tableVisitColumns.Add(tableVisitColumn);
-                    tableVisitColumn = new TableVisitColumn();
-                    tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
-                    tableVisitColumn.TotalVisits++;
-                    if (tableVisits[i].IsHostEntry)
+                    if (tableVisits[i].CreatedOn.Date == tableVisits[i + 1].CreatedOn.Date)
                     {
-                        tableVisitColumn.HostEnteredVisits++;
+                        tableVisitColumn.TotalVisits++;
+                        if (tableVisits[i].IsHostEntry)
+                        {
+                            tableVisitColumn.HostEnteredVisits++;
+                        }
+                        else
+                        {
+                            tableVisitColumn.DinerEnteredVisits++;
+                        }
                     }
                     else
                     {
-                        tableVisitColumn.DinerEnteredVisits++;
+                        tableVisitColumns.Add(tableVisitColumn);
+                        tableVisitColumn = new TableVisitColumn();
+                        tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
+                        tableVisitColumn.TotalVisits++;
+                        if (tableVisits[i].IsHostEntry)
+                        {
+                            tableVisitColumn.HostEnteredVisits++;
+                        }
+                        else
+                        {
+                            tableVisitColumn.DinerEnteredVisits++;
+                        }
                     }
                 }
+                if (i == 0)
+                {
+                    if (tableVisits[i].CreatedOn.Date == tableVisits[i + 1].CreatedOn.Date)
+                    {
+                        tableVisitColumn.TotalVisits++;
+                        if (tableVisits[i].IsHostEntry)
+                        {
+                            tableVisitColumn.HostEnteredVisits++;
+                        }
+                        else
+                        {
+                            tableVisitColumn.DinerEnteredVisits++;
+                        }
+                    }
+                    else
+                    {
+                        tableVisitColumn = new TableVisitColumn();
+                        tableVisitColumn.Date = tableVisits[i].CreatedOn.Date;
+                        tableVisitColumn.TotalVisits++;
+                        if (tableVisits[i].IsHostEntry)
+                        {
+                            tableVisitColumn.HostEnteredVisits++;
+                        }
+                        else
+                        {
+                            tableVisitColumn.DinerEnteredVisits++;
+                        }
+                    }
+                    tableVisitColumns.Add(tableVisitColumn);
+                }
             }
+            tableVisitColumns.Reverse();
+            //END OF TERRIBLE SPAGHETTI CODE!!////////////////////////////////////////////////////////////////
+
+            RestaurantDisplayAnalyticsViewModel viewModel = new RestaurantDisplayAnalyticsViewModel();
+            viewModel.Restaurant = restaurant;
+            viewModel.TableVisits = tableVisits;
+            viewModel.TableVisitColumns = tableVisitColumns;
 
             return View(viewModel);
         }
