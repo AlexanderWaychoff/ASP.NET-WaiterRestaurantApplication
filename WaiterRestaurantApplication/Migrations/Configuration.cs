@@ -27,7 +27,7 @@ namespace WaiterRestaurantApplication.Migrations
 
 
             //alex's file path////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
+            filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
             //end of alex's stuff/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             bool fileExists = File.Exists(filePath + "states.csv");
@@ -139,7 +139,7 @@ namespace WaiterRestaurantApplication.Migrations
                         restaurant.CurrentWaitMinutes = Convert.ToInt32(fields[7]);
                         restaurant.WaitRateId = whileCount;
                         waitRate.WaitRateId = whileCount;
-                        waitRate.WateRatePercentage = random.Next(5, 95);
+                        waitRate.WaitRatePercentage = random.Next(5, 95);
                         restaurants.Add(restaurant);
                         waitRates.Add(waitRate);
                     }
