@@ -27,7 +27,6 @@ namespace WaiterRestaurantApplication.Migrations
 
 
             //alex's file path////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\states.csv";
             //filePath = @"C:\Users\Andross\Desktop\school_projects\C#\WaiterRestaurantApplication\WaiterRestaurantApplication\CSV\SeedData\";
             //end of alex's stuff/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +54,7 @@ namespace WaiterRestaurantApplication.Migrations
                     }
                 }
                 context.States.AddOrUpdate(c => c.Abbreviation, states.ToArray());
+                context.SaveChanges();
             }
 
             City Milwaukee = new City();
@@ -100,17 +100,22 @@ namespace WaiterRestaurantApplication.Migrations
                     }
                 }
                 context.Addresses.AddOrUpdate(addresses.ToArray());
+                context.SaveChanges();
             }
+
+            Random random = new Random();
             fileExists = File.Exists(filePath + "restaurants.csv");
             if (fileExists)
             {
                 List<Restaurant> restaurants = new List<Restaurant>();
+                List<WaitRate> waitRates = new List<WaitRate>();
                 using (TextFieldParser parser = new TextFieldParser(filePath + "restaurants.csv"))
                 {
                     int whileCount = 0;
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
                     Restaurant restaurant;
+                    WaitRate waitRate;
                     while (!parser.EndOfData)
                     {
                         whileCount += 1;
@@ -121,6 +126,8 @@ namespace WaiterRestaurantApplication.Migrations
                             Console.ReadKey(true);
                         }
                         restaurant = new Restaurant();
+                        waitRate = new WaitRate();
+                        //add waitrate to list and save to context
                         restaurant.RestaurantId = whileCount;
                         restaurant.RestaurantName = fields[0];
                         restaurant.AddressId = Convert.ToInt32(fields[1]);
@@ -130,10 +137,16 @@ namespace WaiterRestaurantApplication.Migrations
                         restaurant.PeopleBeforeWarning = Convert.ToInt32((fields[5]));
                         restaurant.GracePeriodMinutes = Convert.ToInt32(fields[6]);
                         restaurant.CurrentWaitMinutes = Convert.ToInt32(fields[7]);
+                        restaurant.WaitRateId = whileCount;
+                        waitRate.WaitRateId = whileCount;
+                        waitRate.WateRatePercentage = random.Next(5, 95);
                         restaurants.Add(restaurant);
+                        waitRates.Add(waitRate);
                     }
                 }
                 context.Restaurants.AddOrUpdate(restaurants.ToArray());
+                context.WaitRate.AddOrUpdate(waitRates.ToArray());
+                context.SaveChanges();
             }
 
             fileExists = File.Exists(filePath + "weatherConditions.csv");
@@ -161,6 +174,7 @@ namespace WaiterRestaurantApplication.Migrations
                     }
                 }
                 context.WeatherConditions.AddOrUpdate(weatherConditions.ToArray());
+                context.SaveChanges();
             }
 
             fileExists = File.Exists(filePath + "tableVisits.csv");
@@ -169,13 +183,17 @@ namespace WaiterRestaurantApplication.Migrations
                 List<TableVisit> tableVisits = new List<TableVisit>();
                 using (TextFieldParser parser = new TextFieldParser(filePath + "tableVisits.csv"))
                 {
-                    int whileCount = 0;
+                    //adjust datetime inputs here for week leading up to presentation (as long as the week doesn't cross into a month)
+                    int year = 2018;
+                    int month = 1;
+                    int startDay = 12;
+                    int endDay = 18;
+                    int whileCount = startDay;
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
                     TableVisit tableVisit;
                     while (!parser.EndOfData)
                     {
-                        whileCount += 1;
                         string[] fields = parser.ReadFields();
                         if (fields.Any(x => x.Length == 0))
                         {
@@ -196,16 +214,77 @@ namespace WaiterRestaurantApplication.Migrations
                         }
                         tableVisit.PartySize = Convert.ToInt32(fields[4]);
                         tableVisit.RestaurantId = Convert.ToInt32(fields[5]);
+                        if (Convert.ToInt32(fields[6]) == 1)
+                        {
+                            tableVisit.IsHostEntry = true;
+                        }
+                        else
+                        {
+                            tableVisit.IsHostEntry = false;
+                        }
 
                         tableVisit.IsWarned = true;
                         tableVisit.IsActive = false;
-                        tableVisit.CreatedOn = new DateTime(2017, 12, whileCount);
+                        tableVisit.CreatedOn = new DateTime(year, month, whileCount);
 
                         tableVisits.Add(tableVisit);
+                        whileCount += 1;
+                        if(whileCount > endDay)
+                        {
+                            whileCount = startDay;
+                        }
                     }
+
                 }
                 context.TableVisits.AddOrUpdate(tableVisits.ToArray());
+                //context.SaveChanges();
             }
+
+            int amountOfTableVisitsToAddForToday = 10;
+            WeatherCondition weatherConditionToday = null;
+            List<TableVisit> tableVisitsToday = new List<TableVisit>();
+            int tableVisitsPrimaryKey = 22; //check tableVisits.csv, keep this count 1 above the entries in the csv.
+            while (amountOfTableVisitsToAddForToday > 0)
+            {
+                amountOfTableVisitsToAddForToday -= 1;
+                if(weatherConditionToday == null)
+                {
+                    weatherConditionToday = new WeatherCondition("Milwaukee");
+                    context.WeatherConditions.Add(weatherConditionToday);
+                    context.SaveChanges();
+                }
+                TableVisit tableVisit = new TableVisit();
+
+                tableVisit.TableVisitId = tableVisitsPrimaryKey;
+                tableVisitsPrimaryKey += 1;
+                tableVisit.WaitMinutes = random.Next(10, 35);
+                tableVisit.WeatherConditionId = 5;  //check weatherConditions.csv, keep this count 1 above the entries in the csv.
+                if(tableVisit.WaitMinutes % 3 == 1)
+                {
+                    tableVisit.IsSatisfied = false;
+                }
+                else
+                {
+                    tableVisit.IsSatisfied = true;
+                }
+                tableVisit.PartySize = random.Next(2, 11);
+                tableVisit.RestaurantId = 1;
+                if(tableVisit.PartySize % 2 == 0)
+                {
+                    tableVisit.IsHostEntry = true;
+                }
+                else
+                {
+                    tableVisit.IsHostEntry = false;
+                }
+                tableVisit.IsWarned = true;
+                tableVisit.IsActive = false;
+                tableVisit.CreatedOn = DateTime.Now;
+
+                tableVisitsToday.Add(tableVisit);
+                //context.SaveChanges();
+            }
+            context.TableVisits.AddOrUpdate(tableVisitsToday.ToArray());
 
             //Seed the subscription types
             SubscriptionType monthlySubscription = new SubscriptionType();
